@@ -1,0 +1,10 @@
+#IPython:
+.ipynb_checkpoints
+
+#Mac:
+.DS_Store
+
+#Latex:
+*.synctex.gz
+*.aux
+*.log
