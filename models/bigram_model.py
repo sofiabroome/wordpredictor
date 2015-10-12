@@ -9,9 +9,8 @@ class BigramModel(AbstractNgramModel):
 
     def train(self, words):
         self.words = words
-        self.bigrams = nltk.bigrams(words)
+        self.bigrams = list(nltk.bigrams(words))
         self.frequencies = nltk.FreqDist(self.bigrams)
-        self.bigrams = nltk.bigrams(words)
         self.probs_bg = nltk.MLEProbDist(self.frequencies)
 
     def predict_next_word(self, base_query_string):
