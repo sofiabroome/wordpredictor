@@ -14,9 +14,9 @@ class BigramModel(AbstractNgramModel):
         self.bigrams = nltk.bigrams(words)
         self.probs_bg = nltk.MLEProbDist(self.frequencies)
 
-    def predict_next_word(self, query_string):
+    def predict_next_word(self, base_query_string):
         matches = []
-        query = query_string.split()
+        query = base_query_string.split()
         for bigram in self.bigrams:
             if bigram[0] == unicode(query[-1]):
                 # print bigram, probs_bg.prob(bigram)

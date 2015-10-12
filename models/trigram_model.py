@@ -14,9 +14,9 @@ class TrigramModel(AbstractNgramModel):
         self.trigrams = nltk.trigrams(words)
         self.probs_bg = nltk.MLEProbDist(self.frequencies)
 
-    def predict_next_word(self, query_string):
+    def predict_next_word(self, basequery_string):
         matches = []
-        query = query_string.split()
+        query = basequery_string.split()
         for trigram in self.trigrams:
             if trigram[0] == unicode(query[-2])\
                and trigram[1] == unicode(query[-1]):
