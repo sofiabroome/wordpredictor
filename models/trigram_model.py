@@ -9,15 +9,13 @@ class TrigramModel(AbstractNgramModel):
 
     def train(self, words):
         self.words = words
-        self.trigrams = nltk.trigrams(words)
-        self.frequencies = nltk.FreqDist(self.trigrams)
-        self.trigrams = nltk.trigrams(words)
+        self.frequencies = nltk.FreqDist(nltk.trigrams(words))
         self.probs_bg = nltk.MLEProbDist(self.frequencies)
 
-    def predict_next_word(self, basequery_string):
+    def predict_next_word(self, base_query_string):
         matches = []
-        query = basequery_string.split()
-        for trigram in self.trigrams:
+        query = base_query_string.split()
+        for trigram in nltk.trigrams(self.words):
             if trigram[0] == unicode(query[-2])\
                and trigram[1] == unicode(query[-1]):
                 # print trigram, probs_bg.prob(trigram)
