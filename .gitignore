@@ -1,6 +1,9 @@
 #IPython:
 .ipynb_checkpoints
 
+#Python compiled files
+*.pyc
+
 #Mac:
 .DS_Store
 
