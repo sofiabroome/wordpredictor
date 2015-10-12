@@ -25,6 +25,6 @@ class AbstractNgramModel():
                     i += 1
                 base_query_string = base_query_string + " " + norm_matches[i][0][-1]
             else:
-                print "NO_MORE_OPTION"
+                print "There is no likely ngram with these last words. Try some smoothing methods."
         print "The result is:\n", base_query_string
         return base_query_string
