@@ -15,12 +15,9 @@ class NgramModel(AbstractNgramModel):
         self.ngrams = list(nltk.ngrams(words, self.n))
         self.frequencies = nltk.FreqDist(self.ngrams)
         self.probs_ng = nltk.MLEProbDist(self.frequencies)
-        print self.probs_ng
 
     def smooth(self, smoothing, *args):
-        print self.frequencies
         self.probs_ng = getattr(nltk, smoothing)(*args)
-        print self.probs_ng
 
     def predict_next_word(self, base_query_string):
         matches = []
