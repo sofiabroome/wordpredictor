@@ -1,3 +1,4 @@
-./initsess
-./pystuff.py > corp.txt
+. initsess
+./preproc.py > corp.txt
 ngram-count -text corp.txt -lm outLM -order 3 -write outNGRAM
+ngram-count -text ~/nltk_data/corpora/gutenberg/melville-moby_dick.txt -lm model.LM -order 3 -write model.NGRAM
