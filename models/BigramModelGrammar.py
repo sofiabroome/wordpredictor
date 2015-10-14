@@ -32,11 +32,11 @@ class BigramModelGrammar(AbstractNgramModel):
                     noun_follower = b[1] #should crudely be a '.','ADP' or 'verb'
                                          # see my explore_nltk-notebook for graph
                     if noun_follower == '.':
-                        prob += 0.00001
+                        prob += 0.000001
                     if noun_follower == 'ADP':
-                        prob += 0.00001
+                        prob += 0.000001
                     if noun_follower == 'VERB':
-                        prob += 0.00001
+                        prob += 0.000001  # i know that i'm not normalizing :) 
                 # print bigram, probs_bg.prob(bigram)
                 matches.append(((a,b), prob))
         matches.sort(key=lambda x: x[1])
