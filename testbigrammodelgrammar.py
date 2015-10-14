@@ -12,5 +12,5 @@ tag_fd = nltk.FreqDist(tag for (word, tag) in brown_fiction_tagged)
 bmg = BigramModelGrammar()
 bmg.train(brown_fiction_tagged)
 
-matches = bmg.predict_next_word("the landlord came into the room light")
+matches = bmg.predict_next_word("call me")
 print matches[-1]
