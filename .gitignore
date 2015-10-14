@@ -4,8 +4,6 @@
 #Python compiled files
 *.pyc
 
-*.pdf
-
 #Mac:
 .DS_Store
 
@@ -33,3 +31,6 @@
 *.mtc1
 *.out
 *.synctex.gz
+
+#this is generated, ignore to avoid conflicts
+*/ai15-report-template.pdf
