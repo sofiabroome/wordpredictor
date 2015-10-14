@@ -94,21 +94,40 @@ bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
 bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
 
 \subsection{Outline}
-Bla bla bla bla bla bla bla Section~\ref{sec:relwork} bla bla bla bla 
+Bla bla bla bla bla bla bla Section~\ref{sec:ngram} bla bla bla bla 
 bla bla bla bla bla Section~\ref{sec:method} bla bla bla bla bla bla 
 bla bla bla bla bla bla bla bla bla bla bla Section~\ref{sec:exps}
 bla bla bla bla bla bla Section~\ref{sec:summary} bla bla bla bla bla
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Related work}
-\label{sec:relwork}
+%%%%%%%%%%%%%%%%%%   NGRAM MODELS   %%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{N-gram models}
+\label{sec:ngram}
 
-Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
-bla bla bla bla bla bla bla bla bla bla \cite{RussellNorvigAIBook3rd}
-bla bla bla bla bla bla
+\subsection{Theory}
+The first mathematical tool needed in all natural language processing experiment is n-gram models. Speech taggers, smoothing and other methods may not be implemented at first, but n-gram models are needed to predict the next likely words of a sentence. 
+These models are quite easy to understand: if n is an integer fixed, a n-gram model works as a Markov chain to predict the next word. A model is trained on a corpora C, for instance a book or a set of books, so that the probability of each n-gram in the language is learned by the model. The bigger the corpora the more accurate and reliable will be the model as it will have more data to compute probabilities and  More precisely, the probability $p$ that the word $w_n$ follows the group of words $w_1 w_2 ... w_{n-1}$ is given by the following formula:
+
+$$ p = p(w_n | w_1 .. w_{n-1}) = \frac{|{(w_1, .., w_{n-1}, w_n) \in C}|}{|{(w_1, .., w_{n-1}, x) \in C}|} $$
+
+With this formula, it is possible to know the more likely next word of a sentence, but also to generate the end of the sentence, each new word selected at random using this probability distribution. Therefore, a n-gram which appeared a lot in a corpora is more likely to appear in the sentence generator. However, this also tells us that heuristically, we should expect different results from one corpora to another. For instance using corpora from Shakespeare, the generated sentences are likely to be more erratic than with a novel since Shakespeare's syntax and grammar is more complicated.
+
+\subsection{Experiments}
+\subsubsection{Parameter $n$}
+	The first experiment we did was to try to understand the influence of n in our word predictor and how we could tune this parameter. In these experiments, only the corpora and n is changed. There is no use of speech tagger or smoothing yet. The figure \ref{carroll_tuning_n} shows multiple iterations of prediction of the end of the sentence "Alice was looking for" with n-gram models for n between 1 and 4. The corpora used was the novel "Alice in Wonderland" from Lewis Carroll, 1865. 
+	We should note that a 1-gram model is not a Markov model. It just predicts a word according to its frequency in a book, regardless of the previous words. As punctuation symbols are considered as words in this corpora, that explains why it predicts so many commas and apostrophes. 
+	Using 2-gram models will only predict a word based according to the last one. This explains why after words like "the" and "a" there are often adjectives or nouns. However, the prediction is still not perfect since 2-gram models seems a bit shallow.
+	With 3-gram models and 4-gram models one can see that the sentences are a bit more grammatically correct but there is still some issues since the English grammar and syntax are not used in these models. This is why this is necessary to implement taggers and use a model that takes into consideration the grammar and the syntax of a language. Another thing with 4-gram models is that we can see the predictions are quite close for different attempts. This is because the more words are fixed, the less freedom there is for the next word: there is less 2-gram starting with "for" than 4-grams starting with "was looking for" in the corpora.
+	
+	If n is too low, the predictor works really bad because one or two words might not be enough to predict a likely next word. However if n is too big, the corpora need to be really big as well and contain enough different n-gram so that the predictor is more diversified.
+
+
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
