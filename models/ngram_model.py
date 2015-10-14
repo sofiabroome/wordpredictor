@@ -16,9 +16,6 @@ class NgramModel(AbstractNgramModel):
         self.frequencies = nltk.FreqDist(self.ngrams)
         self.probs_ng = nltk.MLEProbDist(self.frequencies)
 
-    def smooth(self, smoothing, *args):
-        self.probs_ng = getattr(nltk, smoothing)(*args)
-
     def predict_next_word(self, base_query_string):
         matches = []
         query = base_query_string.split()
