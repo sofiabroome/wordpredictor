@@ -68,7 +68,7 @@ bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
 \item Please remove \textbf{this} NOTE section in your final report.
 
 \end{itemize}
-\section{Introduction (1--2 pages)}
+\section{Introduction}
 \label{sec:intro}
 
 Being able to dissect, classify, analyze and reproduce language is a highly relevant task for various fields. In the realm of artificial intelligence, we want to give language to our agents by means of communicating with them. When we deal with natural language processing we say that we make language models. Seen as there is no finite set of rules that can describe, say, the entire English language in a complete sense, for pragmatic reasons our best option seems to be basing our models on probabilistic observations - regardless of Noam Chomsky's contempt\cite{JurafskyBook} for the notion of probability of a sentence.
@@ -83,15 +83,12 @@ There are some practical issues with the classical n-gram model. What do we do w
 
 Furthermore, what kinds of test sets does our training set allow us to perform well on? One should train on a  corpus which is representative of the domain of the intended use. And what happens to our model when we apply it to languages with a higher degree of inflection like Swedish, Basque or German?
 
-From the above examples we see that in many cases just using the n-gram model in itself will not suffice. Over the years researchers in natural language processing have added a lot of tweaks to the original idea such as linear combinations of n-gams, cache language models, LSA-based language models and maximum entropy models, to name a few.
+From the above examples we see that in many cases just using the n-gram model in itself will not suffice. Over the years, researchers in natural language processing have added a lot of tweaks to the original idea such as linear combinations of n-gams, cache language models, LSA-based language models and maximum entropy models, to name a few.
 
 In what follows we will explore n-gram models of varying degrees on dito corpora and grammar to see which results are obtained under which circumstances.
 
 \subsection{Contribution}
-Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
+What should we write here?
 
 \subsection{Outline}
 Bla bla bla bla bla bla bla Section~\ref{sec:ngram} bla bla bla bla 
@@ -129,22 +126,23 @@ With this formula, it is possible to know the more likely next word of a sentenc
 
 
 
+What is this? Saying something about our references?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{My method}
+\section{Method}
 \label{sec:method}
 
-Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
+Starting from the Natural Language Toolkit (NLTK), we experimented with the different methods provided there. After a while we realized that this collection had some broken classes, notably the n-gram class with smoothing methods, which was essential to our experimenting. We thus resorted to the smoothing methods hopefully provided by spaCy, according to our project plan, but well there stumbled upon more problems, in that they provide no explicit methods for creating n-grams or smoothing. This took us outside the scope of the project plan, towards SRILM, a powerful tool for building statistical language models.
+
+For the word prediction without smoothing we however stuck to NLTK but with our own implementations of n-gram-models. We made an abstract n-gram model class from which a bigram-, trigram-, and n-gram-class inherited.
 
 \subsection{Implementation}
 \label{sec:impl}
 
-Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
+Erik writes something about his implementation of SRILM. Doesn't have to be long but just so we have something on smoothing.
+
+Something about our thoughts behind the abstract class + ngramclasses...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

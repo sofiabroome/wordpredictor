@@ -10,6 +10,6 @@ g = GrammarModel()
 g.train(nltk.corpus.brown.tagged_words(tagset='universal'))
 t = TrigramModel()
 t.train(nltk.corpus.brown.words())
-query_string = "And now for something"
+query_string = "with his left"
 better = g.predict_next_word(t,query_string)
 print better
