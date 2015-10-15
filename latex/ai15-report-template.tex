@@ -4,7 +4,7 @@
 \usepackage{epsfig}
 \usepackage{graphics}
 \usepackage{fancyhdr}
-% \usepackage[backend=bibtex]{biblatex}
+\usepackage{listings}
 
 \graphicspath{{pictures/}}
 
@@ -262,27 +262,46 @@ Query followed by 10 generated words & $n$ \\ \hline
 
 
 
-
-\begin{table}
-%\begin{center}
-\begin{tabular}{| l |c|}
-\hline
-Query followed by 10 generated words for corpus 2 & $n$ \\ \hline
-"Alice was looking for a very neatly spread his belt and began . ' " & 2\\ \hline
-"Alice was looking for eggs , I can kick a little bottle that stood "& 3 \\ \hline
-"Alice was looking for the fan and a pair of white kid gloves , " & 4 \\ \hline
-\end{tabular}
-\caption{ Corpus 4}
-\label{tab:corpora1}
-%\end{center}
-\end{table}
-
-
-
-
 \subsection{Issues}
 
+
 \section{N-gram models with smoothing}
+
+\subsubsection{Initial practical problems: an SRILM excursion}
+Building a full-fledged language model in Python is not a trivial endeavor (this could be a project in itself). We thought NLTK provided the facilities to accomplish this, but it turned out this module had been deprecated due to bugs. 
+
+SRI provides an extensive framework for just this task trough SRILM (this framework is also evidently widely adopted - the introductory SRILM article by Andreas Stolcke has over 3 000 Google Scholar citations). 
+
+SRILM itself is a library of C++ classes, but contains ready-made command line tools. For example, invoking "ngram-count" on the Moby Dick corpus from NLTK (where corpus.txt has been parsed to match SRILMs format: one sentence per line with tokens separated by whitespace) produces an ngram language model of this text, with Good-Turing discounting and Katz backoff for smoothing:
+
+\begin{lstlisting}[language=bash]
+  $ ngram-count -text corpus.txt -lm model.LM -order 3
+     -write model.NGRAM
+\end{lstlisting}
+
+
+This model (model.LM) can then be queried and processed with command line tools like for example ngram,
+
+\begin{lstlisting}[language=bash]
+  $ ngram -order 3 -lm model.LM -ppl input.sent -debug 1 
+\end{lstlisting}
+
+
+which produces
+
+\begin{lstlisting}[language=bash]
+  $ reading 19313 1-grams 
+  $ reading 118199 2-grams
+  $ reading 19961 3-grams
+  $ this is a sentence 1 sentences, 4 words, 1 OOVs
+  $ 0 zeroprobs, logprob= -6.1645 ppl= 34.7636 ppl1= 113.458
+\end{lstlisting}
+
+
+where input.sent is a text file containing the line "this is a sentence", and the output is the log probability of this sentence according to our model.LM (the word "sentence" is not part of the vocabulary ? 1 OOV.)
+
+Doing actual predictions with this framework proved to be a bit harder, we found a Python wrapper (pysrilm) that was supposed to provide this functionality, however, it was a Cython extension that needed to be compiled and linked against the SRILIM library. This did not work, so we returned to our own Python n-gram model to implement a smoothing method ourselves.
+
 \label{sec:ngramsmoothing}
 
 \subsection{Theory}
