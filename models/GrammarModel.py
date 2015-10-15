@@ -1,11 +1,6 @@
 from abstract_ngram_model import AbstractNgramModel
 import nltk
-<<<<<<< Updated upstream
-=======
-from bigram_model import BigramModel
-from trigram_model import TrigramModel
 from ngram_model import NgramModel
->>>>>>> Stashed changes
 import random
 
 """Grammar Ngram model implementation"""
@@ -83,13 +78,10 @@ class GrammarModel(AbstractNgramModel):
         # Predict the possible tags and their probabilities after this tag sequence
         # according to our Grammar Ngrams model
         tag_matches = self.predict_next_tag(simple)
-<<<<<<< Updated upstream
 
-=======
         if len(tag_matches) == 0:
             empty = []
             return empty
->>>>>>> Stashed changes
         # Keep only the predicted tag (the last one) of each match
         tags = [(tuple[-1],prob) for tuple, prob in list(set(tag_matches))]
 
