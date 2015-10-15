@@ -1,21 +1,33 @@
 from abstract_ngram_model import AbstractNgramModel
 import nltk
+<<<<<<< Updated upstream
+=======
+from bigram_model import BigramModel
+from trigram_model import TrigramModel
+from ngram_model import NgramModel
+>>>>>>> Stashed changes
 import random
 
 """Grammar Ngram model implementation"""
 
 
 class GrammarModel(AbstractNgramModel):
-
+    
     def __init__(self, n=4):
         self.n = n
 
     # Should receive words with tags
-    def train(self, words):
-        tags = []
-        for i in range(len(words)):
-            tags.append(words[i][1])
-        self.ngrams = list(nltk.ngrams(tags, self.n))
+    def train(self, words, tagged=False):
+        if tagged==True:
+            tags = []
+            for i in range(len(words)):
+                tags.append(words[i][1])
+            self.ngrams = list(nltk.ngrams(tags, self.n))
+        else:
+            #text = nltk.word_tokenize(words)
+            tagged_words = nltk.pos_tag(words)
+            universal_tags = [nltk.map_tag('en-ptb', 'universal', tag) for word, tag in tagged_words]
+            self.ngrams = list(nltk.ngrams(universal_tags, self.n))
         self.frequencies = nltk.FreqDist(self.ngrams)
         self.probs_ng = nltk.MLEProbDist(self.frequencies)
         print self.probs_ng
@@ -71,7 +83,13 @@ class GrammarModel(AbstractNgramModel):
         # Predict the possible tags and their probabilities after this tag sequence
         # according to our Grammar Ngrams model
         tag_matches = self.predict_next_tag(simple)
+<<<<<<< Updated upstream
 
+=======
+        if len(tag_matches) == 0:
+            empty = []
+            return empty
+>>>>>>> Stashed changes
         # Keep only the predicted tag (the last one) of each match
         tags = [(tuple[-1],prob) for tuple, prob in list(set(tag_matches))]
 
@@ -104,7 +122,27 @@ class GrammarModel(AbstractNgramModel):
         for i in range(len(prior)):
             tuple, prob = list(set(word_matches))[i]
             better_matches.append((tuple, prob*prior[i]))
+        prob_sum = sum(m[-1] for m in better_matches)
+        better_matches = [[m[0], m[-1] / prob_sum] for m in better_matches]
         return better_matches
+    
+    def predict_words(self, model, base_query_string, n=10):
+        for i in range(n):
+            matches = self.predict_next_word(model,base_query_string)
+            prob_sum = sum(m[-1] for m in matches)
+            matches = [[m[0], m[-1] / prob_sum] for m in matches]
+            rand = random.random()
+            j = 0
+            if len(matches) != 0:
+                while (rand > matches[j][-1]):
+                    rand -= matches[j][-1]
+                    j += 1
+                # print "Winning match is: ", matches[j]
+                base_query_string = base_query_string + " " + matches[j][0][-1]
+            else:
+                print "There is no likely ngram with these last words. Try some smoothing methods."
+                break
+        return base_query_string
 
     def at_the_end(self, ngram, query):
         for i in range(self.n - 1):
