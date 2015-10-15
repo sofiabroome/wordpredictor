@@ -84,8 +84,8 @@ From the above examples we see that in many cases just using the n-gram model in
 
 In what follows we will explore n-gram models of varying degrees on dito corpora and grammar to see which results are obtained under which circumstances.
 
-\subsection{Contribution}
-What should we write here?
+\subsection{Related works}
+We began our exploring of natural language processing through the Natural Language Toolkit website and the accompanying book, Natural Language Processing with Python. The theory to accompany the more practical methods from NLTK was mainly obtained from Daniel Jurafsky and James H. Martin's 1999 book Speech and Language processing \ref{JurafskyBook}. Daniel Jurafsky also has made a series of video lectures on the subject for a Coursera online course. From \ref{brown1992} and \ref{garay2006text} we got a sense of the challenges of extending the concept of n-grams, as well as for modern applications of text prediction.
 
 \subsection{Outline}
 The lion's share of the report consists of three sections, hereunder, concerning respectively n-gram models, n-gram models with smoothing and n-gram models with grammar constraints, where each of them contains some theory, accounts of our related experiments and discussions of possible issues. In the end, the results of our work are presented with a subsequent summary and conclusion.
@@ -105,19 +105,19 @@ These models are quite easy to understand: if n is a fixed integer, a n-gram mod
 
 $$ p = p(w_n | w_1 .. w_{n-1}) = \frac{|{(w_1, .., w_{n-1}, w_n) \in C}|}{|{(w_1, .., w_{n-1}, x) \in C}|} $$
 
-With this formula, it is possible to know the more likely next word of a sentence, but also to generate the end of the sentence, each new word selected at random using this probability distribution. Therefore, a n-gram which appeared a lot in a corpora is more likely to appear in the sentence generator. However, this also tells us that heuristically, we should expect different results from one corpora to another. For instance using corpora from Shakespeare, the generated sentences are likely to be more erratic than with a novel since Shakespeare's syntax and grammar are more complicated. For modernist poetry like Whitman's Leaves of Grass (corpus \# 4) it turns out to work quite well with a basic n-gram model, since the somewhat abstract resulting sentences fit with the context, and since the verse structure isn't as demanding as in shakespearian texts.
+With this formula, it is possible to know the more likely next word of a sentence, but also to generate the end of the sentence, each new word selected at random using this probability distribution. Therefore, a n-gram which appeared a lot in a corpora is more likely to appear in the sentence generator. However, this also tells us that heuristically, we should expect different results from one corpora to another. For instance using corpora from Shakespeare, the generated sentences are likely to be more erratic than with a novel since Shakespeare's syntax and grammar are more complicated. For modernist poetry like Whitman's Leaves of Grass (corpus \# 4) it turns out to work quite well with a basic n-gram model, since the somewhat abstract resulting sentences fit with the textual situation and since the verse structure isn't as demanding as in shakespearian texts. Poetry has higher context satisfaction for a crude n-gram model.
 
 \subsection{Experiments}
 \subsubsection{Parameter $n$}
-	The first experiment we did was to try to understand the influence of n in our word predictor and how we could tune this parameter. In these experiments, only the corpora and n is changed - no parts of speech tagger or smoothing have been used. The figure \ref{carroll_tuning_n} shows multiple iterations of prediction of the end of the sentence "Alice was looking for" with n-gram models for n between 1 and 4. The corpora used was the novel "Alice in Wonderland" from Lewis Carroll, 1865. 
+	The first experiment we did was to try to understand the influence of n in our word predictor and how we could tune this parameter. In these experiments, only the corpora and n is changed - no parts of speech tagger or smoothing have been used. The table \ref{tab:corpus2} shows multiple iterations of prediction of the end of the sentence "Alice was looking for" with n-gram models for n between 1 and 4. The corpora used was the novel "Alice in Wonderland" from Lewis Carroll, 1865. 
 	
 We should note that a 1-gram model is not a Markov model. It just predicts a word according to its frequency in a book, regardless of the previous words. As punctuation symbols are considered as words in this corpora, that explains why it predicts so many commas and apostrophes. 
 
-A 2-gram model will only predict a word according to the immediately preceding word in the sequence. This explains why after words like "the" and "a" there are often adjectives or nouns. However, the prediction is still not perfect since 2-gram models seems a bit shallow.
+A 2-gram model will only predict a word according to the immediately preceding word in the sequence. This explains why after words like "the" and "a" there are often adjectives or nouns. However, the prediction is still not perfect because of the short reach of a 2-gram model.
 
-With 3-gram models and 4-gram models one can see that the sentences are a bit more grammatically correct but there is still some issues since the English grammar and syntax are not used in these models. This is why this is necessary to implement taggers and use a model that takes into consideration the grammar and the syntax of a language. Another thing with 4-gram models is that we can see the predictions are quite close for different attempts. This is because the more words are fixed, the less freedom there is for the next word: there is less 2-gram starting with "for" than 4-grams starting with "was looking for" in the corpora.
+With 3-gram models and 4-gram models one can see that the sentences are a bit more grammatically correct but there is still some issues since the English grammar and syntax are not used in these models. This is why this is necessary to implement taggers and use a model that takes into consideration the grammar and the syntax of a language. Another thing with 4-gram models is that we can see the predictions are quite close to each other for different attempts. This is because the more words are fixed, the less freedom there is for the next word: there are fewer bigrams starting with "for" than 4-grams starting with "was looking for" in the corpora.
 	
-If n is too low, the predictor works really bad because one or two words might not be enough to predict a likely next word. However if n is too big, the corpora need to be really big as well and contain enough different n-gram so that the predictor is more diversified.
+If n is too low, the predictor will be inferior because one or two words might not be enough to predict a likely next word. However if n is too big, the corpora needs to be really extensive as well and contain enough different n-gram so that the predictor is more diversified.
 
 \subsubsection{The corpora}
 See \ref{tab:corpora1} for a table of our tested corpora.
@@ -135,7 +135,7 @@ See \ref{tab:corpora1} for a table of our tested corpora.
 
 \end{tabular}
 \caption{The corpora tested in the n-gram experiments.}
-\label{tab:corpora1}
+\label{tab:corplist}
 \end{center}
 \end{table}
 
@@ -165,7 +165,7 @@ Query followed by 10 generated words & $n$ \\ \hline
 "Infant smiles are his own smiles ; Heaven and earth to peace beguiles . DIVINE" & 4 \\ \hline
 \end{tabular}
 \caption{ Corpus 1}
-\label{tab:corpora1}
+\label{tab:corpus1}
 %\end{center}
 \end{table}
 
@@ -179,7 +179,7 @@ Query followed by 10 generated words & $n$ \\ \hline
 "Alice was looking for the fan and a pair of white kid gloves , " & 4 \\ \hline
 \end{tabular}
 \caption{Corpus 2}
-\label{tab:corpora1}
+\label{tab:corpus2}
 %\end{center}
 \end{table}
 
@@ -208,7 +208,7 @@ Query followed by 10 generated words & $n$ \\ \hline
 
 \end{tabular}
 \caption{ Corpus 3}
-\label{tab:corpora1}
+\label{tab:corpus3}
 %\end{center}
 \end{table}
 
@@ -248,14 +248,14 @@ Query followed by 10 generated words & $n$ \\ \hline
 "Sing on there in the swamp - perfume , with brow elate and governing hand ." & 3 \\ \hline
 
 "Sing on there in the swamp , O singer bashful and tender , I hear in" & 4 \\ \hline
-"" & 4 \\ \hline
-"" & 4 \\ \hline
-"" & 4 \\ \hline
-"" & 4 \\ \hline
+"Sing on there in the swamp , O singer bashful and tender , I hear the" & 4 \\ \hline
+"Sing on there in the swamp , O singer bashful and tender , I hear the" & 4 \\ \hline
+"Sing on there in the swamp , O singer bashful and tender , I hear in" & 4 \\ \hline
+"Sing on there in the swamp , O singer bashful and tender , I hear the" & 4 \\ \hline
 
 \end{tabular}
 \caption{ Corpus 4}
-\label{tab:corpora1}
+\label{tab:corpus4}
 %\end{center}
 \end{table}
 
@@ -273,7 +273,7 @@ Query followed by 10 generated words & $n$ \\ \hline
 "I think that you really perceived drops of moisture in the spout - hole" & 4 \\ \hline
 \end{tabular}
 \caption{Corpus 5}
-\label{tab:corpora1}
+\label{tab:corpus5}
 %\end{center}
 \end{table}
 
@@ -336,63 +336,6 @@ Doing actual predictions with this framework proved to be a bit harder, we found
 \subsubsection{The corpora}
 \subsubsection{Example results}
 \subsection{Issues}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Method}
-\label{sec:method}
-
-Starting from the Natural Language Toolkit (NLTK), we experimented with the different methods provided there. After a while we realized that this collection had some broken classes, notably the n-gram class with smoothing methods, which was essential to our experimenting. We thus resorted to the smoothing methods hopefully provided by spaCy, according to our project plan, but well there stumbled upon more problems, in that they provide no explicit methods for creating n-grams or smoothing. This took us outside the scope of the project plan, towards SRILM, a powerful tool for building statistical language models.
-
-For the word prediction without smoothing we however stuck to NLTK but with our own implementations of n-gram-models. We made an abstract n-gram model class from which a bigram-, trigram-, and n-gram-class inherited.
-
-\subsection{Implementation}
-\label{sec:impl}
-
-Erik writes something about his implementation of SRILM. Doesn't have to be long but just so we have something on smoothing.
-
-Something about our thoughts behind the abstract class + ngramclasses...
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Experimental results}
-\label{sec:exps}
-
-\subsection{Experimental setup}
-
-\subsection{Experiment ...}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.8\linewidth]{histogram}
-\caption{A description that makes browsing the paper easy and clearly 
-describes what is in the picture. Make sure that the text in the figure 
-is large enough to read and that the axes are labelled.}
-\label{fig:histogram}
-\end{figure}
-
-Bla bla bla bla bla Figure~\ref{fig:histogram} bla bla bla bla bla bla 
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
-
-\begin{table}
-\begin{center}
-\begin{tabular}{|c|c|c|}
-\hline
-Bla bla & Bla bla & Bla bla \\ \hline
-42 & 42 & 42 \\ \hline
-42 & 42 & 42 \\ \hline
-\end{tabular}
-\caption{A description that makes browsing the paper easy and clearly 
-describes what is in the table.}
-\label{tab:results}
-\end{center}
-\end{table}
-
-Bla bla bla bla bla Table~\ref{tab:results} bla bla bla bla bla bla 
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
-bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
