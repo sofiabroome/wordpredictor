@@ -76,11 +76,11 @@ An n-gram gives us context for words, albeit not the full one. Gao and Suzuki\ci
 
 N-grams can also be used in a meta-sense - for instance it's common for part-of-speech-taggers to use n-gram models where they tag the current word based on the last word's tag.
 
-There are some practical issues with the classical n-gram model. What do we do with the n-grams that aren't in our training set and thus have zero probability assigned? This is where techniques of so called smoothing comes in so that our model doesn't fail on encountering a previously unseen word in the test set. In case we are dealing with a higher-order n-gram and we find it has no probability mass , we might want to "back off" from the higher order and estimate the probability for a conditioned unigram, meaning we temporarily look at a smaller portion of a word's history.
+There are some practical issues with the classical n-gram model. What do we do with the n-grams that aren't in our training set and thus have zero probability assigned? This is where techniques of so called smoothing comes in so that our model doesn't fail upon encountering a previously unseen word in the test set. And in case we are dealing with a higher-order n-gram and we find it has no probability mass , we might want to "back off" from the higher order and estimate the probability for a conditioned unigram, meaning we temporarily look at a smaller portion of a word's history.
 
 Furthermore, what kinds of test sets does our training set allow us to perform well on? One should train on a  corpus which is representative of the domain of the intended use. And what happens to our model when we apply it to languages with a higher degree of inflection like Swedish, Basque or German?
 
-From the above examples we see that in many cases just using the n-gram model in itself will not suffice. Over the years, researchers in natural language processing have added a lot of tweaks to the original idea such as linear combinations of n-gams, cache language models, LSA-based language models and maximum entropy models, to name a few.
+From the above examples we see that in many cases just using the n-gram model in itself will not suffice. Over the years, researchers in natural language processing have added a lot of tweaks to the original idea such as linear combinations of n-grams, cache language models, LSA-based language models and maximum entropy models, to name a few.
 
 In what follows we will explore n-gram models of varying degrees on dito corpora and grammar to see which results are obtained under which circumstances.
 
@@ -105,7 +105,7 @@ These models are quite easy to understand: if n is a fixed integer, a n-gram mod
 
 $$ p = p(w_n | w_1 .. w_{n-1}) = \frac{|{(w_1, .., w_{n-1}, w_n) \in C}|}{|{(w_1, .., w_{n-1}, x) \in C}|} $$
 
-With this formula, it is possible to know the more likely next word of a sentence, but also to generate the end of the sentence, each new word selected at random using this probability distribution. Therefore, a n-gram which appeared a lot in a corpora is more likely to appear in the sentence generator. However, this also tells us that heuristically, we should expect different results from one corpora to another. For instance using corpora from Shakespeare, the generated sentences are likely to be more erratic than with a novel since Shakespeare's syntax and grammar are more complicated.
+With this formula, it is possible to know the more likely next word of a sentence, but also to generate the end of the sentence, each new word selected at random using this probability distribution. Therefore, a n-gram which appeared a lot in a corpora is more likely to appear in the sentence generator. However, this also tells us that heuristically, we should expect different results from one corpora to another. For instance using corpora from Shakespeare, the generated sentences are likely to be more erratic than with a novel since Shakespeare's syntax and grammar are more complicated. For modernist poetry like Whitman's Leaves of Grass (corpus \# 4) it turns out to work quite well with a basic n-gram model, since the somewhat abstract resulting sentences fit with the context, and since the verse structure isn't as demanding as in shakespearian texts.
 
 \subsection{Experiments}
 \subsubsection{Parameter $n$}
@@ -234,6 +234,24 @@ Query followed by 10 generated words & $n$ \\ \hline
 "The delicious singing of the mother of many children , These clamors wild to a race" & 4 \\ \hline
 "The delicious singing of the mother , or of me ; Of their languages , governments" & 4 \\ \hline
 "The delicious singing of the mother shines on the white wrist of the daughter , The" & 4 \\ \hline
+
+"Sing on there in the swamp - congratulatory signs and dead . I shall never refuses" & 2\\ \hline
+"Sing on there in the swamp in songs , English war , Sunlight by the Cascade"& 2 \\ \hline
+"Sing on there in the swamp - dug in disgrace to give an open air I" & 2 \\ \hline
+"Sing on there in the swamp , busier sphere more in granite walls of the West" & 2 \\ \hline
+"Sing on there in the swamp in vain the country ; You past .) Now I" & 2 \\ \hline
+
+"Sing on there in the swamp in the houses are alive with people , I pause" & 3 \\ \hline
+"Sing on there in the swamp in secluded recesses , From the head of the real" & 3 \\ \hline
+"Sing on there in the swamp - cedars , with muttering thunder and lambent eyes watch" & 3 \\ \hline
+"Sing on there in the swamp in the ranks marching , on I go , I'" & 3 \\ \hline
+"Sing on there in the swamp - perfume , with brow elate and governing hand ." & 3 \\ \hline
+
+"Sing on there in the swamp , O singer bashful and tender , I hear in" & 4 \\ \hline
+"" & 4 \\ \hline
+"" & 4 \\ \hline
+"" & 4 \\ \hline
+"" & 4 \\ \hline
 
 \end{tabular}
 \caption{ Corpus 4}
