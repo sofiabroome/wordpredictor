@@ -12,6 +12,7 @@ class NgramModel(AbstractNgramModel):
         assert n != 1
         self.n = n
 
+        # This method is used to learn on a corpora (i.e. get frequencies of each n-gram, ...)
     def train(self, words):
         self.words = words
         self.unique_words = [w[0] for w in set(nltk.ngrams(words, 1))]
@@ -19,9 +20,12 @@ class NgramModel(AbstractNgramModel):
         self.frequencies = nltk.FreqDist(self.ngrams)
         self.probs_ng = nltk.MLEProbDist(self.frequencies)
 
+        # If we want to apply a smoothing method from nltk package, we can just specify it and
+        # its arguments.
     def smooth(self, smoothing, *args):
         self.probs_ng = getattr(nltk, smoothing)(*args)
 
+        # This method is to predict the next n words following a sentence.
     def predict_words(self, base_query_string, n=10):
         for i in range(n):
             matches = self.predict_next_word(base_query_string)
@@ -40,6 +44,9 @@ class NgramModel(AbstractNgramModel):
                 break
         return base_query_string
 
+        # This method uses the probability distribution of each n-gram to take one of them according
+        # to its likelihood. It goes through all n-grams even unseen n-grams from the corpora as a
+        # smoothing method can be used
     def predict_next_word(self, base_query_string):
         matches = []
         query = base_query_string.split()[-(self.n - 1):]
