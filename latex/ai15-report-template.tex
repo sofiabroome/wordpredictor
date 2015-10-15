@@ -88,7 +88,7 @@ In what follows we will explore n-gram models of varying degrees on dito corpora
 What should we write here?
 
 \subsection{Outline}
-The lion's share of the report consists of three sections, hereunder, concerning respectively n-gram models, n-gram models with smoothing and n-gram models with grammar constraints, where each of them contains some theory, accounts of our related experiments and discuss possible issues. In the end, the results of our work are presented with a subsequent summary and conclusion.
+The lion's share of the report consists of three sections, hereunder, concerning respectively n-gram models, n-gram models with smoothing and n-gram models with grammar constraints, where each of them contains some theory, accounts of our related experiments and discussions of possible issues. In the end, the results of our work are presented with a subsequent summary and conclusion.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -123,14 +123,14 @@ If n is too low, the predictor works really bad because one or two words might n
 See \ref{tab:corpora1} for a table of our tested corpora.
 \begin{table}
 \begin{center}
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|l|c|c|}
 \hline
-Tested corpora & Year & Nr. of words \\ \hline
-Moby Dick by Herman Melville & 1851 & 260819\\ \hline
-Alice's Adventures in Wonderland by Lewis Carroll & 1865 & 34110 \\ \hline
-The Bible & & 1010654 \\ \hline
-Leaves of Grass by Walt Whitman & 1891 & 154883\\ \hline
-Selected poems by William Blake & 1789 & 8354 \\ \hline
+\# & Tested corpora & Year & Nr. of words\\ \hline
+1 & Moby Dick by Herman Melville & 1851 & 260819\\ \hline
+2 & Alice's Adventures in Wonderland by Lewis Carroll & 1865 & 34110 \\ \hline
+3 & The Bible & & 1010654 \\ \hline
+4 & Leaves of Grass by Walt Whitman & 1891 & 154883\\ \hline
+5 & Selected poems by William Blake & 1789 & 8354 \\ \hline
 \end{tabular}
 \caption{The corpora tested in the n-gram experiments.}
 \label{tab:corpora1}
@@ -138,6 +138,21 @@ Selected poems by William Blake & 1789 & 8354 \\ \hline
 \end{table}
 
 \subsubsection{Example results}
+
+\begin{table}
+%\begin{center}
+\begin{tabular}{| l |c|}
+\hline
+Query followed by 10 generated words & $n$ \\ \hline
+"Alice was looking for a very neatly spread his belt and began . ' " & 2\\ \hline
+"Alice was looking for eggs , I can kick a little bottle that stood "& 3 \\ \hline
+"Alice was looking for the fan and a pair of white kid gloves , " & 4 \\ \hline
+\end{tabular}
+\caption{ Generated word sequences after training on}
+\label{tab:corpora1}
+%\end{center}
+\end{table}
+
 
 
 \subsection{Issues}
