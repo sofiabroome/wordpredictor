@@ -54,19 +54,11 @@ An investigation of how basic n-gram models of our own implementation can be imp
 \section*{NOTE}
 \begin{itemize}
 
-\item The following sections are arranged in the order they would appear in a scientific paper. We think that these sections need to be there and written. However, these are only guidelines and if you think that some of these sections or subsections are irrelevant to you, please feel free to remove them. Similarly, if you want to include more sections or subsections please go ahead. Also feel free to rearrange them according to your convenience, but keeping some common sense (eg.~Introduction cannot come after Conclusions).
-
 \item \textit{Introduction, Related Works, Experimental Results, Discussions, Summary} are sections that MUST be contained.
-
-\item In the section of your \textit{Method}: please do not list your project as log book entries, please talk about the final method you want to present to us. Talk about the method scientifically or technically and not as "I did this..." "Then I tried this..." "this happened...." etc.
-
-\item Do not paste any code unless it is very relevant!
 
 \item The section \textit{Contributions} is a place to express any difference in contributions. The default assumption is that you all agree that all of you had an equal part to play in the project.
 
 \item We suggest that you try to write this as scientifically as possible and not simply like a project report. Good Luck!
-
-\item Please remove \textbf{this} NOTE section in your final report.
 
 \end{itemize}
 \section{Introduction}
@@ -109,22 +101,21 @@ These models are quite easy to understand: if n is a fixed integer, a n-gram mod
 
 $$ p = p(w_n | w_1 .. w_{n-1}) = \frac{|{(w_1, .., w_{n-1}, w_n) \in C}|}{|{(w_1, .., w_{n-1}, x) \in C}|} $$
 
-With this formula, it is possible to know the more likely next word of a sentence, but also to generate the end of the sentence, each new word selected at random using this probability distribution. Therefore, a n-gram which appeared a lot in a corpora is more likely to appear in the sentence generator. However, this also tells us that heuristically, we should expect different results from one corpora to another. For instance using corpora from Shakespeare, the generated sentences are likely to be more erratic than with a novel since Shakespeare's syntax and grammar are more complicated. For modernist poetry like Whitman's Leaves of Grass (corpus \# 4) it turns out to work quite well with a basic n-gram model, since the somewhat abstract resulting sentences fit with the textual situation and since the verse structure isn't as demanding as in shakespearian texts. Poetry has higher context satisfaction for a crude n-gram model.
+With this formula, it is possible to know the more likely next word of a sentence, but also to generate the end of the sentence, each new word selected using the probability distribution. Therefore, a n-gram which appeared a lot in a corpora is more likely to appear in the sentence generator. However, this also tells us that heuristically, we should expect different results from one corpora to another. For instance using corpora from Shakespeare, the generated sentences are likely to be more erratic than with a novel since Shakespeare's syntax and grammar are more complicated. For modernist poetry like Whitman's Leaves of Grass (corpus \# 4) it turns out to work quite well with a basic n-gram model, since the somewhat abstract resulting sentences fit with the textual situation and since the verse structure isn't as demanding as in shakespearian texts. Poetry has higher context satisfaction for a crude n-gram model.
 
 \subsection{Experiments}
 \subsubsection{Parameter $n$}
-	The first experiment we did was to try to understand the influence of n in our word predictor and how we could tune this parameter. In these experiments, only the corpora and n is changed - no parts of speech tagger or smoothing have been used. The table \ref{tab:corpus2} shows multiple iterations of prediction of the end of the sentence "Alice was looking for" with n-gram models for n between 1 and 4. The corpora used was the novel "Alice in Wonderland" from Lewis Carroll, 1865. 
+	The first experiment we did was to try to understand the influence of n in our word predictor and how we could tune this parameter. In these experiments, only the corpora and n is changed - no parts of speech tagger or smoothing have been used. The table \ref{tab:corpus2} shows n-gram predictions of the end of the sentence "Alice was looking for" for $ n\in(2,4) $.
 	
-We should note that a 1-gram model is not a Markov model. It just predicts a word according to its frequency in a book, regardless of the previous words. As punctuation symbols are considered as words in this corpora, that explains why it predicts so many commas and apostrophes. 
+We should note that a 1-gram model is not a Markov model. It just predicts a word according to its frequency in a book. As punctuation symbols are considered as words in this corpora, that explains why it predicts so many commas and apostrophes. 
 
 A 2-gram model will only predict a word according to the immediately preceding word in the sequence. This explains why after words like "the" and "a" there are often adjectives or nouns. However, the prediction is still not perfect because of the short reach of a 2-gram model.
 
-With 3-gram models and 4-gram models one can see that the sentences are a bit more grammatically correct but there is still some issues since the English grammar and syntax are not used in these models. This is why this is necessary to implement taggers and use a model that takes into consideration the grammar and the syntax of a language. Another thing with 4-gram models is that we can see the predictions are quite close to each other for different attempts. This is because the more words are fixed, the less freedom there is for the next word: there are fewer bigrams starting with "for" than 4-grams starting with "was looking for" in the corpora.
+With 3-gram models and 4-gram models one can see that the sentences are a bit more grammatically correct but there is still some issues since the English grammar and syntax are not used in these models. Another thing with 4-gram models is that we can see the predictions are quite close to each other for different attempts. This is because the more words are fixed, the less freedom there is for the next word: there are fewer bigrams starting with "for" than 4-grams starting with "was looking for" in the corpora.
 	
-If n is too low, the predictor will be inferior because one or two words might not be enough to predict a likely next word. However if n is too big, the corpora needs to be really extensive as well and contain enough different n-gram so that the predictor is more diversified.
+If n is too low, the predictor will be inferior because one or two words might not be enough to predict a likely next word. However if n is too big, the corpora needs to be really extensive as well and contain enough different n-grams so that the predictor is more diversified.
 
-\subsubsection{The corpora}
-See \ref{tab:corpora1} for a table of our tested corpora.
+\subsubsection{Example results}
 \begin{table}
 \begin{center}
 \begin{tabular}{|c|l|c|c|}
@@ -135,15 +126,11 @@ See \ref{tab:corpora1} for a table of our tested corpora.
 3 & The Bible & & 100000 (1010654) \\ \hline
 4 & Leaves of Grass by Walt Whitman & 1891 & 154883\\ \hline
 5 & Moby Dick by Herman Melville & 1851 & 260819\\ \hline
-
-
 \end{tabular}
 \caption{The corpora tested in the n-gram experiments.}
 \label{tab:corplist}
 \end{center}
 \end{table}
-
-\subsubsection{Example results}
 
 \begin{table}
 %\begin{center}
@@ -154,10 +141,8 @@ Query followed by 10 generated words & $n$ \\ \hline
 "Infant smiles are his own destruction ? Can delight . Folly is dwelling too ?"& 2 \\ \hline
 "Infant smiles are his own smiles on my foe outstretched beneath the skies ; And" & 2 \\ \hline
 "Infant smiles are his own grave plot she in darkness plough ? Can a threat" & 2 \\ \hline
-"Infant smiles are his own destruction ? When we rose to tenfold life , merrily" & 2 \\ \hline
 
 "Infant smiles are his own smiles ; Heaven and earth to peace beguiles . DIVINE " & 3 \\ \hline
-"Infant smiles are his own smiles ; Heaven and earth to peace beguiles . DIVINE" & 3 \\ \hline
 "Infant smiles are his own smiles ; Heaven and earth to peace beguiles . DIVINE" & 3 \\ \hline
 "Infant smiles are his own smiles ; Heaven and earth to peace , and fled " & 3 \\ \hline
 "Infant smiles are his own smiles ; Heaven and earth to peace beguiles . DIVINE" & 3 \\ \hline
@@ -165,8 +150,7 @@ Query followed by 10 generated words & $n$ \\ \hline
 "Infant smiles are his own smiles ; Heaven and earth to peace beguiles . DIVINE" & 4 \\ \hline
 "Infant smiles are his own smiles ; Heaven and earth to peace beguiles . DIVINE" & 4 \\ \hline
 "Infant smiles are his own smiles ; Heaven and earth to peace beguiles . DIVINE" & 4 \\ \hline
-"Infant smiles are his own smiles ; Heaven and earth to peace beguiles . DIVINE" & 4 \\ \hline
-"Infant smiles are his own smiles ; Heaven and earth to peace beguiles . DIVINE" & 4 \\ \hline
+
 \end{tabular}
 \caption{ Corpus 1}
 \label{tab:corpus1}
@@ -186,7 +170,6 @@ Query followed by 10 generated words & $n$ \\ \hline
 \label{tab:corpus2}
 %\end{center}
 \end{table}
-
 \begin{table}
 %\begin{center}
 \begin{tabular}{| l |c|}
@@ -195,7 +178,6 @@ Query followed by 10 generated words & $n$ \\ \hline
 "And they were both naked unto Pharaoh ' s milk , and shut him . " & 2\\ \hline
 "And they were both naked ? 26 And Miriam the flesh from thence did Sarah"& 2 \\ \hline
 "And they were both naked ? what hast done in the best of the north" & 2 \\ \hline
-"And they were both naked , I have established by my master saw that he" & 2 \\ \hline
 "And they were both naked ; and daubed it without blemish unto him : 13" & 2 \\ \hline
 
 "And they were both naked , the people , and Calneh , in the coupling " & 3 \\ \hline
@@ -227,7 +209,6 @@ Query followed by 10 generated words & $n$ \\ \hline
 "The delicious singing of the mother kisses of the clasp me shall cover ' s funeral" & 2 \\ \hline
 "The delicious singing of the mother told - lung ' d every blow through the same" & 2 \\ \hline
 
-"The delicious singing of the mother to part , and the climbing sap , Arms and" & 3 \\ \hline
 "The delicious singing of the mother sleeps with at night , The singers of old or" & 3 \\ \hline
 "The delicious singing of the mother misused by her children , resolute , under the sun" & 3 \\ \hline
 "The delicious singing of the mother never turning her vigilant eyes ,) Calmly a lady '" & 3 \\ \hline
@@ -247,7 +228,6 @@ Query followed by 10 generated words & $n$ \\ \hline
 
 "Sing on there in the swamp in the houses are alive with people , I pause" & 3 \\ \hline
 "Sing on there in the swamp in secluded recesses , From the head of the real" & 3 \\ \hline
-"Sing on there in the swamp - cedars , with muttering thunder and lambent eyes watch" & 3 \\ \hline
 "Sing on there in the swamp in the ranks marching , on I go , I'" & 3 \\ \hline
 "Sing on there in the swamp - perfume , with brow elate and governing hand ." & 3 \\ \hline
 
@@ -255,14 +235,12 @@ Query followed by 10 generated words & $n$ \\ \hline
 "Sing on there in the swamp , O singer bashful and tender , I hear the" & 4 \\ \hline
 "Sing on there in the swamp , O singer bashful and tender , I hear the" & 4 \\ \hline
 "Sing on there in the swamp , O singer bashful and tender , I hear in" & 4 \\ \hline
-"Sing on there in the swamp , O singer bashful and tender , I hear the" & 4 \\ \hline
 
 \end{tabular}
 \caption{ Corpus 4}
 \label{tab:corpus4}
 %\end{center}
 \end{table}
-
 
 \begin{table}
 %\begin{center}
@@ -281,18 +259,7 @@ Query followed by 10 generated words & $n$ \\ \hline
 %\end{center}
 \end{table}
 
-
-
-
 \subsection{Issues}
-
-
-
-
-
-
-
-
 
 \section{N-gram models with smoothing}
 
@@ -389,9 +356,40 @@ Ratio was/blue &           & 37710     & 28370     & 99.00      \\ \bottomrule
 \label{sec:ngramgrammar}
 
 \subsection{Theory}
+
+The standard approach to grammar in language modeling is to tag every word in a corpus with so called parts-of-speech-tags. This is challenging since one word can have varying grammatical roles and semantic meaning depending on its syntactic location. Different tagsets can be used depending on how fine grained you want your model to be, but broadly speaking they can be divided into two categories: rule-based taggers and stochastic taggers. Rule-based taggers are decided according to a set of explicitly written rules that were made to dodge tagging ambiguities. Stochastic taggers on the other hand can function like decision trees orientating through probabilistic features or Hidden markov models where for instance an applied Viterbi algorithm can choose the word-and-tag-path with the highest likelihood. The use of HMMs when working with POS-tagging started in the 1980s. 
+
 \subsection{Experiments}
-\subsubsection{The corpora}
-\subsubsection{Example results}
+
+We have observed that sometimes our n-gram model gives us an answer that doesn?t fit in syntactically. Because of this we decided to use the nature of each word to perfect our predictions. We tried a simple approach: first, we created a new text from all the parts-of-speech-tags (POS-tags) associated to the original words of the text. Then, we trained an n-gram model on this text. Here, n can be higher than when we work with normal corpora because a lot of completely different word sequences can be hidden behind the same POS-tag sequence. For example, we have one particular sequence to complete and n is the longest number for an n-gram model we can accept if we want to find word sequences of length n on our corpora where the first n-1 are the last from our word sequence.
+
+But, if we only consider the tags associated to the words, we can build an m-gram model where m is higher than n and it gives the probability of having one POS tag after the tags representing our word sequence, and it is much more likely to have this kind of tags sequence even if we they do not represent the same words sequence. It means that we have more information about the probability of the tag following our sequence. We decided to multiply the probability of an n-gram word sequence with the probability of the m-gram tag sequence where the last tag is the tag representing the last word of the words sequence. This method changes the original results and makes some sequences more probable than others with the grammatical information we have.
+
+\begin{table}[]
+\centering
+\caption{Words generated with grammar constraints}
+\label{grammarsent}
+\begin{tabular}{| l |c|}
+\hline
+Query followed by 10 generated words                                   & n \\ \hline
+Alice was looking for some curiosity . Then the Rabbit . CHAPTER IX .  & 2 \\ \hline
+Alice was looking for the voice behind a sulky tone , twinkle --"' and & 2 \\ \hline
+Alice was looking for a bat , that : and take the earth .              & 2 \\ \hline
+Alice was looking for some time to be in a sort of the book            & 2 \\ \hline
+Alice was looking for eggs , as well go in at the Duchess ;            & 3 \\ \hline
+Alice was looking for eggs , as the whole court was a dispute going    & 3 \\ \hline
+Alice was looking for eggs , as the game . The judge , would           & 3 \\ \hline
+Alice was looking for the Duchess began in a day at school , too       & 3 \\ \hline
+Alice was looking for the garden : the others looked round also , and  & 3 \\ \hline
+Alice was looking for the fan and gloves , and , as the game           & 4 \\ \hline
+Alice was looking for the fan and a pair of gloves and a fan           & 4 \\ \hline
+Alice was looking for the fan and a pair of the gloves , and           & 4 \\ \hline
+Alice was looking for the fan and the pair of white kid gloves in      & 4 \\ \hline
+Alice was looking for the fan and the pair of white kid gloves while   & 4 \\ \hline
+Alice was looking for the fan and the pair of white kid gloves ,       & 4 \\ \hline
+\end{tabular}
+\end{table}
+
 \subsection{Issues}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -399,18 +397,16 @@ Ratio was/blue &           & 37710     & 28370     & 99.00      \\ \bottomrule
 \section{Summary and Conclusions}
 \label{sec:summary}
 
-N-gram models need additional layers consisting of smoothing techniques and grammar constraints to be more credible as  word predictors.
+N-gram models need additional layers consisting of smoothing techniques and grammar constraints to be more credible as word predictors.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Contributions}
 \label{sec:contributions}
-We the members of project groupXX unanimously declare that 
+We the members of project group34 unanimously declare that 
 we have all equally contributed toward the completion of this
-project. (PLEASE CHANGE THIS SUITABLY WITH DETAILS, IF IT IS NOT TRUE)
-
-
+project. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
