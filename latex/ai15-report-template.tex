@@ -11,7 +11,7 @@
 
 \graphicspath{{pictures/}}
 
-\title{Word prediction performance of n-gram models applied to essentially different corpora}
+\title{Word prediction performance of n-gram models applied to  different corpora}
 \author{\hspace*{-0.5cm}
 GROUP 34\\
 \begin{tabular}{cccc}
@@ -42,7 +42,7 @@ sbroome@kth.se & jeremyk@kth.se & MAIL3@kth.se & efred@kth.se \\
 \thispagestyle{fancy}
 
 \begin{abstract}
-An investigation of how basic n-gram models of our own implementation can be improved by adding smoothing techniques and grammar constraints. Tests have been performed on corpora of varying character.
+The goal of this project was to predict word to complete a word sequence. Having gone from simple bigram models to more complex n-gram models using different smoothing methods and grammar constraints, we have been able to improve the performances of our predictor on different types of corpora. N-gram models need additional layers consisting of smoothing techniques and grammar constraints to be more credible as word predictors. The performance of our system not only relies on the length of our n-gram model but also on its customization with smoothing, grammar constraints, the size of the training corpora and its similarity to our input.
 \end{abstract}
 
 
@@ -54,22 +54,17 @@ An investigation of how basic n-gram models of our own implementation can be imp
 
 \section{Introduction}
 \label{sec:intro}
+Being able to dissect, classify, analyze and reproduce language is a highly relevant task for various fields. In the realm of artificial intelligence, we want to give language to our agents by means of communicating with them. When we deal with natural language processing we say that we make language models. Seen as there is no finite set of rules that can describe, say, the entire English language in a complete sense, the prevailing method is to approximate language by probabilistic methods.
 
-Being able to dissect, classify, analyze and reproduce language is a highly relevant task for various fields. In the realm of artificial intelligence, we want to give language to our agents by means of communicating with them. When we deal with natural language processing we say that we make language models. Seen as there is no finite set of rules that can describe, say, the entire English language in a complete sense, for pragmatic reasons our best option seems to be basing our models on probabilistic observations - regardless of Noam Chomsky's contempt\cite{JurafskyBook} for the notion of probability of a sentence.
+N-grams are the building block for almost every language model. An n-gram is simply a tuple of n co-occuring words, and the probability distribution of these tuples (according to some collection of words) constitute our model of the language. This  simple construct captures many patterns in language. Grammar is not taken into account explicitly, but local context will inevitably be built in. For instance, an adjective will in many cases be followed by a noun, or a pronoun by a verb, and thus a bigram composed of those two grammatical types in the mentioned order will score high in probability.  Gao and Suzuki\cite{gao2004long} explore long distance dependency for words through word clusters and the linguistically motivated {\it function word skipping} method where function words such as "has", "a", "in", "and", "the", etc, are skipped in favor of more significant words, called head words
 
-At the foundation of every language model that wants to predict words is the concept of n-grams, a method based on probabilistic distributions over length n combinations of subsequent words. An n-gram is a Markov chain of degree n-1. This quite simple construct can capture many patterns in sentences. Even though it doesn't consider grammar explicitly, grammar will inevitably be built in. For instance, an adjective will in many cases be followed by a noun, or a pronoun by a verb, and thus a bigram composed of those two grammatical types in the mentioned order will score high in probability. 
+There are some practical issues with the n-gram model. Perfectly valid ngrams missing from the training corpus will be given a zero probability. Smoothing techniques are an attempt to tackle this issue. Higher-order n-gram are particularly prone to sparseness, so we might want to "back off" from the n'th order and approximate it with a weighted sum of lower order ngrams. 
 
-An n-gram gives us context for words, albeit not the full one. Gao and Suzuki\cite{gao2004long} explore long distance dependency for words through word clusters and the linguistically motivated {\it function word skipping} method where function words such as "has", "a", "in", "and", "the", etc, are skipped in favor of more significant words, called head words. In our experiments however, we will not delve further into this subject.
+Furthermore, what kinds of test sets does our training set allow us to perform well on? One should train on a  corpus which is representative of the domain of the intended use. And what happens to our model when we apply it to languages with a higher degree of inflection? We train on English text, but languages like Swedish, Basque or German have been shown to perform worse. 
 
-N-grams can also be used in a meta-sense - for instance it's common for part-of-speech-taggers to use n-gram models where they tag the current word based on the last word's tag.
+From the above examples we see that in many cases just using the n-gram model in itself will not suffice. Over the years, researchers in natural language processing have added a lot of tweaks to the original idea, cache language models, LSA-based language models and maximum entropy models, to name a few.
 
-There are some practical issues with the classical n-gram model. What do we do with the n-grams that aren't in our training set and thus have zero probability assigned? This is where techniques of so called smoothing comes in so that our model doesn't fail upon encountering a previously unseen word in the test set. And in case we are dealing with a higher-order n-gram and we find it has no probability mass , we might want to "back off" from the higher order and estimate the probability for a conditioned unigram, meaning we temporarily look at a smaller portion of a word's history.
-
-Furthermore, what kinds of test sets does our training set allow us to perform well on? One should train on a  corpus which is representative of the domain of the intended use. And what happens to our model when we apply it to languages with a higher degree of inflection like Swedish, Basque or German?
-
-From the above examples we see that in many cases just using the n-gram model in itself will not suffice. Over the years, researchers in natural language processing have added a lot of tweaks to the original idea such as linear combinations of n-grams, cache language models, LSA-based language models and maximum entropy models, to name a few.
-
-In what follows we will explore n-gram models of varying degrees on dito corpora and grammar to see which results are obtained under which circumstances.
+In what follows we will explore n-gram models of varying degrees on corpora and grammar to see which results are obtained under which circumstances.
 
 \subsection{Related works}
 We began our exploring of natural language processing through the Natural Language Toolkit website and the accompanying book, Natural Language Processing with Python. The theory to accompany the more practical methods from NLTK was mainly obtained from Daniel Jurafsky and James H. Martin's 1999 book Speech and Language processing \cite{JurafskyBook}. Daniel Jurafsky also has made a series of video lectures on the subject for a Coursera online course. From \cite{brown1992class} and \cite{garay2006text} we got a sense of the challenges of extending the concept of n-grams, as well as for modern applications of text prediction.
