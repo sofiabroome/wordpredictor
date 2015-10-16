@@ -6,6 +6,8 @@
 \usepackage{fancyhdr}
 \usepackage{listings}
 \usepackage{booktabs}
+\usepackage{lastpage}
+
 
 \graphicspath{{pictures/}}
 
@@ -14,8 +16,8 @@
 GROUP 34\\
 \begin{tabular}{cccc}
 Sofia Broom\'e & Jeremy Krebs & Valentin Geffrier & Erik Fredriksen \\
-901210 & BIRTHDATE2 & BIRTHDATE3 & 860328 \\
-sbroome@kth.se & MAIL2@kth.se & MAIL3@kth.se & efred@kth.se \\
+901210 & 920421 & BIRTHDATE3 & 860328 \\
+sbroome@kth.se & jeremyk@kth.se & MAIL3@kth.se & efred@kth.se \\
 \includegraphics[width=0.13\linewidth]{Nikkaluokta} & 
 \includegraphics[width=0.13\linewidth]{Alan_Turing_photo} & 
 \includegraphics[width=0.13\linewidth]{Alan_Turing_photo} & 
@@ -30,6 +32,7 @@ sbroome@kth.se & MAIL2@kth.se & MAIL3@kth.se & efred@kth.se \\
 \pagestyle{fancy}
 \setlength{\headheight}{15pt}
 \fancyhf{}
+\cfoot{\thepage / \pageref{LastPage}}
 \lhead{DD2380 ai15} % DO NOT REMOVE!!!!
 \rhead{S. Broom\'e, J. Krebs, V. Geffrier, E. Fredriksen} %% UPDATE WITH YOUR NAMES
 
@@ -284,6 +287,13 @@ Query followed by 10 generated words & $n$ \\ \hline
 \subsection{Issues}
 
 
+
+
+
+
+
+
+
 \section{N-gram models with smoothing}
 
 \subsubsection{Initial practical problems: an SRILM excursion}
@@ -324,26 +334,57 @@ Doing actual predictions with this framework proved to be a bit harder, we found
 \label{sec:ngramsmoothing}
 
 \subsection{Theory}
-\subsection{Experiments}
-\subsubsection{The corpora}
-\subsubsection{Example results}
+	The issue behind simple n-gram models is that the maximum likelihood estimate only consider n-grams in the corpora. That is, many n-grams are not considered by the model to have a probability strictly positive because there is sparsity in the data. However in most cases one does not want to give a probability of 0 to unseen event: an event that did not occur in the training data could occur in the test data. Smoothing methods are used to adapt the probability distribution so that unseen events have a probability greater than 0. There are different ways of smoothing and we experimented mainly three methods implemented in $nltk$:
+	
+	\begin{description}
+		\item[Witten-Bell:] This method gives the same probability mass to the unseen events as the probability mass of the events seen exactly once in the corpora. As there are usually a lot more unseen events than events that occured once, the model seems reliable because it will give a low probability to the unseen event. A parameter given is the number of total events, seen or unseen. If there are $m$ unique words in the corpora and we are considering n-grams, it is not necessarily $m^n$ since the corpora could be lacking words we want to add manually, or we can ignore some n-grams because they are not valid grammatically.
+		\item[Lidstone:] This method simply adds a value $\gamma$ to all the frequency of events. It then computes the basic maximum-likelihood probability based on those new frequencies. This parameter, to tune, is usually around 0.5. In this case, this means the weight of an unseen event will become the third of the weight of an event that occured once. We can note that this method derives from the Laplace smoothing method which is when $\gamma = 1$.
+		\item[Good-Turing:] This method is more complicated and gives to the events that occured $n$ times the same probability mass than the mass of the events that occured $n+1$ times. With high values of $n$ it can happen that no event occured that many times. For these events, an estimation is done. In the case of nltk, the number of events that occured $n$ times is estimated to be $N(n) = an^b$ where $a$ and $b$ are estimated using linear regression on the logarithm of the equation: $log N(n) = log a + b log n$.
+		However, different methods can be used to estimate $N(n)$ when it equals $0$ in the corpora.
+	\end{description}
+	
+	\subsection{Experiments}
+	
+	In the following experiments, we tried to point out how smoothing methods could change the probability distribution of the n-grams for our predictor. We also have compared the sentences with or without smoothing, but comparing the probability distribution makes more sense to understand how smoothing methods work. We also took a specific example with three n-grams of different frequencies in the corpora, to see how their probability and the ratio of their probability changes with the smoothing method.
+	
+\subsubsection{The probability distribution}
+	As of figure \ref{fig:smoothingdist}, we tried to see the effect of the three methods mentionned earlier on the probability distribution of the 2-grams and 4-grams for the corpora "Alice in Wonderland". The n-grams with low frequency are not considered here as their probability is the same after smoothing with those methods. In blue is the probability distribution without smoothing and in red is the new probability distribution after a smoothing method. As we could expect, the latter is lower than the former because probability weight is given from seen events to unseen events. However, this mass is not the same for the different methods and the Lidstone probability for instance do not take the same weight from all n-grams. With the parameters tried, the Good Turing smoothing methods gives a distribution really close to the former, which is why the tuning of the parameters is important. It also depends on the size of the corpora as the ratio between the number of unseen events and seen events has a huge effect in the computation of the new probability distributions.
 
-\begin{table}[]
+\begin{figure}
+	\label{fig:smoothingdist}
+	\begin{tabular}{cc}
+		\includegraphics[width=0.52\linewidth]{2_Lidstone} & 
+		\includegraphics[width=0.52\linewidth]{4_Lidstone} \\
+		\includegraphics[width=0.52\linewidth]{2_WittenBell} & 
+		\includegraphics[width=0.52\linewidth]{4_WittenBell} \\
+		\includegraphics[width=0.52\linewidth]{2_Turing} & 
+		\includegraphics[width=0.52\linewidth]{4_Turing} \\
+	\end{tabular}
+	\caption{Changes of the probability distribution for different smoothing methods}
+\end{figure}
+
+\subsubsection{Specific example}
+	Table \ref{tab:smoothingprobs} shows the evolution of the probabilities and ratio of the probabilities of three 3-grams in the same corpora. In the corpora, (she, was) has a frequency of 49, (she, is) has a frequency of 3 and (she, blue) is unseen. As we can seen, after smoothing technics, the probability of (she, blue) is not 0 anymore, which was expected. However we can see the ratio of the probabilities between (she, was) and (she, is) can change depending on the method. If Witten-Bell does not change it, Lidstone and Turing does as they do not allocate the same weight pourcentage of each seen events to the unseen ones.
+
+
+\begin{table}[!h]
 \centering
 \caption{Data for different smoothing techniques}
-\label{smoothingprobs}
-\begin{tabular}{@{}lllllll@{}}
+\label{tab:smoothingprobs}
+\begin{tabular}{@{}lllll@{}}
 \toprule
-Smoothing:     & None      & SGT       & WB        & LSPB 0.5  & LSPB 1    & LPD       \\ \midrule
-P(she, is)     & 8.795e-05 & 6.072e-05 & 6.025e-05 & 8.343e-05 & 8.033e-05 & 8.033e-05 \\
-P(she, was)    & 0.001437  & 0.001396  & 0.0009841 & 0.001180  & 0.001004  & 0.001004  \\
-P(she, blue)   & 0.000     & 3.701e-08 & 3.469e-08 & 1.192e-05 & 2.008e-05 & 2.008e-05 \\
-Ratio was/is   & 16.33     & 22.99     & 16.33     & 14.14     & 12.50     & 12.50     \\
-Ratio was/blue &           & 37710     & 28370     & 99.00     & 50.00     & 50.00    \\ \bottomrule
+Smoothing:     & None      & SGT       & WB        & LSPB 0.5   \\ \midrule
+P(she, is)     & 8.795e-05 & 6.072e-05 & 6.025e-05 & 8.343e-05  \\
+P(she, was)    & 0.001437  & 0.001396  & 0.0009841 & 0.001180   \\
+P(she, blue)   & 0.000     & 3.701e-08 & 3.469e-08 & 1.192e-05  \\
+Ratio was/is   & 16.33     & 22.99     & 16.33     & 14.14      \\
+Ratio was/blue &           & 37710     & 28370     & 99.00      \\ \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Issues}
+	The last example can show how careful one needs to be when it comes to smoothing. If the parameter is badly tuned, the probability of an unseen event such as (she, blue) can be great whereas it is not grammatically correct. This is why grammar constraints are needed to work with n-gram models, because simple models and smoothing technics cannot grasp the complex grammar and structure of a language.
+
 
 \section{N-gram models with grammar constraints}
 \label{sec:ngramgrammar}
