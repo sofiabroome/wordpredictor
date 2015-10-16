@@ -268,33 +268,7 @@ Building a full-fledged language model in Python is not a trivial endeavor (this
 
 SRI provides an extensive framework for just this task trough SRILM (this framework is also evidently widely adopted - the introductory SRILM article by Andreas Stolcke has over 3 000 Google Scholar citations). 
 
-SRILM itself is a library of C++ classes, but contains ready-made command line tools. For example, invoking "ngram-count" on the Moby Dick corpus from NLTK (where corpus.txt has been parsed to match SRILMs format: one sentence per line with tokens separated by whitespace) produces an ngram language model of this text, with Good-Turing discounting and Katz backoff for smoothing:
-
-\begin{lstlisting}[language=bash]
-  $ ngram-count -text corpus.txt -lm model.LM -order 3
-     -write model.NGRAM
-\end{lstlisting}
-
-
-This model (model.LM) can then be queried and processed with command line tools like for example ngram,
-
-\begin{lstlisting}[language=bash]
-  $ ngram -order 3 -lm model.LM -ppl input.sent -debug 1 
-\end{lstlisting}
-
-
-which produces
-
-\begin{lstlisting}[language=bash]
-  $ reading 19313 1-grams 
-  $ reading 118199 2-grams
-  $ reading 19961 3-grams
-  $ this is a sentence 1 sentences, 4 words, 1 OOVs
-  $ 0 zeroprobs, logprob= -6.1645 ppl= 34.7636 ppl1= 113.458
-\end{lstlisting}
-
-
-where input.sent is a text file containing the line "this is a sentence", and the output is the log probability of this sentence according to our model.LM (the word "sentence" is not part of the vocabulary ? 1 OOV.)
+SRILM itself is a library of C++ classes, but contains ready-made command line tools. For example, invoking "ngram-count" on the Moby Dick corpus from NLTK (where corpus.txt has been parsed to match SRILMs format: one sentence per line with tokens separated by whitespace) produces an ngram language model of this text, with Good-Turing discounting and Katz backoff for smoothing.
 
 Doing actual predictions with this framework proved to be a bit harder, we found a Python wrapper (pysrilm) that was supposed to provide this functionality, however, it was a Cython extension that needed to be compiled and linked against the SRILIM library. This did not work, so we returned to our own Python n-gram model to implement a smoothing method ourselves.
 
@@ -392,12 +366,19 @@ Alice was looking for the fan and the pair of white kid gloves ,       & 4 \\ \h
 
 \subsection{Issues}
 
+Without smoothing, we can have the same problem than before where every possible tags sequence according to the possible words Ngrams, have a probability equal to zero. To resolve this, we can use the same smoothing that we used for words and still get results. Our method does not rely on a mathematical explanation but it still allows us to take into consideration the grammar, at a deeper level than for words, at the only condition that we use corpora which have the same grammar type as the text we want to complete, to train our Ngrams model. Indeed, we know that the syntax can be completely different in poetry, Shakespeare works or novels. It was already true when we did not use grammar but it becomes absolutely necessary here or the grammar prediction would just make the performance of our results decrease.
+Using parse trees could be an improvement to model grammatical sentence structure, as it is more precise to use a more detailed context than only POS tags.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Summary and Conclusions}
 \label{sec:summary}
 
 N-gram models need additional layers consisting of smoothing techniques and grammar constraints to be more credible as word predictors.
+
+The goal of this project was to predict word to complete a word sequence. Having gone from simple bigram models to more complex n-gram models using different smoothing methods and grammar constraints, we have been able to improve the performances of our predictor on different types of corpora.
+
+We also realized that the performance of our system not only relies on the length of our n-gram model but also on its customization with smoothing, grammar constraints, the size of the training corpora and its similarity to our input.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
