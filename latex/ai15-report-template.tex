@@ -382,7 +382,7 @@ Ratio was/blue &           & 37710     & 28370     & 99.00      \\ \bottomrule
 \end{table}
 
 \subsection{Issues}
-	The last example can show how careful one needs to be when it comes to smoothing. If the parameter is badly tuned, the probability of an unseen event such as (she, blue) can be great whereas it is not grammatically correct. This is why grammar constraints are needed to work with n-gram models, because simple models and smoothing technics cannot grasp the complex grammar and structure of a language.
+	The last example can show how careful one needs to be when it comes to smoothing. If the parameter is badly tuned, the probability of an unseen event such as (she, blue) can be high regardless of its obvious grammatical problems. We can thus conclude that n-gram models simply in combination with smoothing technics cannot grasp the complex syntax, grammar and structure of language: we need grammar constraints if we want to improve.
 
 
 \section{N-gram models with grammar constraints}
