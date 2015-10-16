@@ -57,7 +57,7 @@ N-grams are the building block for almost every language model. An n-gram is sim
 
 There are some practical issues with the n-gram model. Perfectly valid n-grams missing from the training corpus will be given a zero probability. Smoothing techniques are an attempt to tackle this issue. Higher-order n-gram are particularly prone to sparseness, so we might want to "back off" from the n'th order and approximate it with a weighted sum of lower order n-grams. 
 
-Furthermore, what kinds of test sets does our training set allow us to perform well on? One should train on a  corpus which is representative of the domain of the intended use. And what happens to our model when we apply it to languages with a higher degree of inflection? We train on English text, but languages like Swedish, Basque or German have been shown to perform worse.\cite{garay2006text}
+Furthermore, what kinds of test sets does our training set allow us to perform well on? One should train on a  corpus which is representative of the domain of the intended use. And what happens to our model when we apply it to languages with a higher degree of inflection? We train on English text, but languages like Swedish, Basque or German have been shown to perform worse \cite{garay2006text} .
 
 From the above examples we see that in many cases just using the n-gram model in itself will not suffice. Over the years, researchers in natural language processing have added a lot of tweaks to the original idea; cache language models, LSA-based language models and maximum entropy models, to name a few.
 
@@ -122,8 +122,6 @@ Query followed by 10 generated words & $n$ \\ \hline
 %\end{center}
 \end{table}
 
-
-\subsection{Issues}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -235,7 +233,7 @@ Alice was looking for the fan and the pair of white kid gloves ,       & 4 \\ \h
 
 \subsection{Issues}
 
-Without smoothing, the same problem as before remains: zero probabilites for unseen events (be it tags or words). To resolve this, we can use the same smoothing that we used previously and have better results. Our method does not rely on a mathematical explanation but it still allows us to take into consideration the grammar, at a deeper level than for words, at the only condition that we use corpora which have the same grammar type as the text we want to complete, to train our n-gram model on. Indeed, we know that the syntax can be completely different in poetry, Shakespeare works or novels. It was already true when we did not use grammar but it becomes absolutely necessary here or the grammar prediction would just make the performance of our results decrease.
+Without smoothing, the same problem as before remains: zero probabilities for unseen events (be it tags or words). To resolve this, we can use the same smoothing that we used previously and have better results. Our method does not rely on a mathematical explanation but it still allows us to take into consideration the grammar, at a deeper level than for words, at the only condition that we use corpora which have the same grammar type as the text we want to complete, to train our n-gram model on. Indeed, we know that the syntax can be completely different in poetry, Shakespeare works or novels. It was already true when we did not use grammar but it becomes absolutely necessary here or the grammar prediction would just make the performance of our results decrease.
 Using parse trees could be an improvement to model grammatical sentence structure, as it is more precise to use a more detailed context than only POS tags.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
