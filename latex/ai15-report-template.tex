@@ -89,14 +89,14 @@ This makes it possible to predict a likely next word, but also to generate the e
 
 \subsection{Experimental results}
 \subsubsection{Parameter $n$}
-	One experiment we did was to try to understand the influence of n in our word predictor and how we could tune this parameter. In these experiments, only the corpora and n is changed - no parts of speech tagger or smoothing have been used. The table \ref{tab:corpus2} shows n-gram predictions of the end of the sentence "Alice was looking for" for $ n\in(2,4) $.
+	The first experiment we did was to try to understand the influence of n in our word predictor and how we could tune this parameter. In these experiments, only the corpora and n is changed - no parts-of-speech-tagger or smoothing have been used. The table \ref{tab:corpus2} shows n-gram predictions of the end of the sentence "Alice was looking for" for $ n\in(2,4) $.
 	
 We should note that a 1-gram model is not a Markov model. It just predicts a word according to its frequency in a book. As punctuation symbols are considered as words in this corpora, that explains why it predicts so many commas and apostrophes. 
 
-A 2-gram model will only predict a word according to the immediately preceding word in the sequence. This explains why after words like "the" and "a" there are often adjectives or nouns. However, the prediction is still not perfect because of the short reach of a 2-gram model.
+A 2-gram model will only predict a word according to the immediately preceding word in the sequence. This explains why after words like "the" and "a" there are often adjectives or nouns. However, the prediction is still not perfect because of the short reach of the model.
 
-With 3-gram models and 4-gram models one can see that the sentences are a bit more grammatically correct but there is still some issues since the English grammar and syntax are not used in these models. Another thing with 4-gram models is that we can see the predictions are quite close to each other for different attempts. This is because the more words are fixed, the less freedom there is for the next word: there are fewer bigrams starting with "for" than 4-grams starting with "was looking for" in the corpora.
-	
+With 3-and-4-gram models one can see that the sentences are a bit more grammatically correct but there is still some issues since the English grammar and syntax are not used in these models. Another thing with 4-gram models is that we can see the predictions are quite close to each other for different attempts. This is because the more words are fixed, the less freedom there is for the next word: there are fewer bigrams starting with "for" than 4-grams starting with "was looking for" in the corpora.
+
 If n is too low, the predictor will be inferior because one or two words might not be enough to predict a likely next word. However if n is too big, the corpora needs to be really extensive as well and contain enough different n-grams so that the predictor is more diversified.
 
 \subsubsection{Example}
@@ -134,7 +134,7 @@ Query followed by 10 generated words & $n$ \\ \hline
 \subsubsection{Initial practical problems: an SRILM excursion}
 Building a full-fledged language model in Python is not a trivial endeavor (this could be a project in itself). We thought NLTK provided the facilities to accomplish this, but it turned out this module had been deprecated due to bugs. 
 
-SRI provides an extensive framework for just this task trough SRILM (this framework is also evidently widely adopted - the introductory SRILM article by Andreas Stolcke has over 3 000 Google Scholar citations). 
+The online toolkit SRILM provided by the Stanford Research Institute is an extensive framework, also evidently widely adopted - the introductory SRILM article by Andreas Stolcke has over 3 000 Google Scholar citations.
 
 SRILM itself is a library of C++ classes, but contains ready-made command line tools. For example, invoking "ngram-count" on the Moby Dick corpus from NLTK (where corpus.txt has been parsed to match SRILMs format: one sentence per line with tokens separated by whitespace) produces an ngram language model of this text, with Good-Turing discounting and Katz backoff for smoothing.
 
@@ -143,17 +143,17 @@ Doing actual predictions with this framework proved to be a bit harder, we found
 \label{sec:ngramsmoothing}
 
 \subsection{Theory}
-	The issue behind simple n-gram models is that the maximum likelihood estimate only consider n-grams in the corpora. That is, many n-grams are not considered by the model to have a probability strictly positive because there is sparsity in the data. However in most cases one does not want to give a probability of 0 to an unseen event seen as an event that did not occur in the training data could occur in the test data. Smoothing methods are used to adapt the probability distribution so that unseen events have a probability greater than 0. There are different ways of smoothing and we experimented with mainly three methods implemented in $nltk$:
+	The issue behind simple n-gram models is that the maximum likelihood estimate only consider n-grams in the corpora. That is, many n-grams are not considered by the model to have a strictly positive probability because there is sparsity in the data. However in most cases one does not want to give a zero probability to an unseen event since an event that did not occur in the training data could occur in the test data. Smoothing methods are used to adapt the probability distribution so that unseen events have a probability greater than 0. There are different ways of smoothing and we experimented with mainly three methods implemented in $nltk$:
 	
 	\begin{description}
-		\item[Witten-Bell:] This method gives the same probability mass to the unseen events as the total probability mass of the events seen exactly once in the corpora. As there are usually a lot more unseen events than events that occured once, the model seems reliable because it will give a low probability to the unseen event. A given parameter is the number of total events, seen or unseen. If there are $m$ unique words in the corpora and we are considering n-grams, the parameter will not necessarily be as big as $m^n$ since the corpora could be lacking words that we want to add manually, or we can ignore some n-grams because they are not valid grammatically.
+		\item[Witten-Bell:] This method gives the same probability mass to the unseen events as the total probability mass of the events seen exactly once in the corpora. There are usually a lot more unseen events than events that occured once, thus the model seems reliable because it will give a low probability to the unseen ones. A given parameter is the number of total events, seen or unseen. If there are $m$ unique words in the corpora and we are considering n-grams, the parameter will not necessarily be as big as $m^n$ since the corpora could be lacking words that we want to add manually, or we can ignore some n-grams because they are not valid grammatically.
 		\item[Lidstone:] This method simply adds a value $\gamma$ to the frequency of all events. It then computes the basic maximum-likelihood probability based on those new frequencies. This parameter, is commonly set to around 0.5 but can be tuned. With that value, the weight of an unseen event will be a third of the weight of an event that occured once. We can note that this method derives from the Laplace smoothing method which is when $\gamma = 1$.
 		\item[Good-Turing:] A more complicated method that gives the same probability to the events that occured $n$ times as to the events that occured $n+1$ times. With high values of $n$ it can happen that no event occured that many times. For these events, an estimation is done. In NLTK, the number of events that occured $n$ times is estimated to be $N(n) = an^b$ where $a$ and $b$ are estimated using linear regression on the logarithm of the equation: $log\ N(n) = log\ a + b\ log\ n$.
 	\end{description}
 	
 	\subsection{Experimental results}
 	
-	In the following experiments, we tried to point out how smoothing methods could change the probability distribution of the n-grams for our predictor. We also compared the sentences with or without smoothing, but comparing the probability distribution makes more sense to understand how smoothing methods work. Three n-grams of different frequencies in the corpora served as illustrative examples for how their (respective) were changed with smoothing.
+	In the following experiments, we tried to point out how smoothing methods could change the probability distribution of the n-grams for our predictor. We also compared the sentences with or without smoothing, but looking at the actual numerical probabilities makes more sense to understand how smoothing methods work. Three n-grams of different frequencies in the corpora served as illustrative examples for how their (respective) probabilities were changed with smoothing.
 	
 \subsubsection{The probability distribution}
 	In figure \ref{fig:smoothingdist}, we tried to see what impact the three above techniques had on the probability distribution of the 2-grams and 4-grams for the corpora "Alice in Wonderland". The n-grams with low frequency are not considered here as their probability is roughly the same after smoothing. As we could expect, the blue (smoothed) graphs are generally lower than the red (unsmoothed) because probability weight is taken from seen events to unseen events. The mass distribution however varies between the different methods; the Lidstone probability for instance does not take the same weight from all n-grams. With our parameters, Good Turing doesn't change much of the probability distribution from the unsmoothed case, from which we conclude that the tuning of the parameters is important. We should also take the size of the corpora into account as the ratio between the number of unseen events and seen events has a crucial effect in the computation of probabilites.
@@ -172,8 +172,7 @@ Doing actual predictions with this framework proved to be a bit harder, we found
 \end{figure}
 
 \subsubsection{Specific example}
-	Table \ref{tab:smoothingprobs} shows the probability and probability ratio change of three bigrams from the same corpora: (she, was) with a frequency of 49, (she, is) of count 3 and the unseen (she, blue). Zero probabilities as removed as intended. We can however see the ratio of the probabilities between (she, was) and (she, is) change differently depending on the method. If Witten-Bell does not change it, Lidstone and Turing does as they do not allocate the same weight percentage of each seen events to the unseen ones.
-
+	Table \ref{tab:smoothingprobs} shows the probability and probability ratio change of three bigrams from the same corpora: (she, was) with a frequency of 49, (she, is) of count 3 and the unseen (she, blue). Zero probabilities as removed as intended. We can however see the ratio of the probabilities between (she, was) and (she, is) change differently depending on the method. If Witten-Bell does not change it, Lidstone and Turing does as they do not allocate the same weight percentage of each seen event to the unseen ones.
 
 \begin{table}[!h]
 \small
@@ -200,13 +199,13 @@ Ratio was/blue &           & 37710     & 28370     & 99.00      \\ \bottomrule
 
 \subsection{Theory}
 
-The standard approach to grammar in language modeling is to tag every word in a corpus with so called parts-of-speech-tags. This is challenging since one word can have varying grammatical roles and semantic meaning depending on its syntactic location. Different tagsets can be used depending on how fine grained you want your model to be, but broadly speaking they can be divided into two categories: rule-based taggers and stochastic taggers. Rule-based taggers are decided according to a set of explicitly written rules that were made to dodge tagging ambiguities. Stochastic taggers on the other hand can function like decision trees orientating through probabilistic features or Hidden markov models where for instance an applied Viterbi algorithm can choose the word-and-tag-path with the highest likelihood. The use of HMMs when working with POS-tagging started in the 1980s. 
+The standard approach to grammar in language modeling is to tag every word in a corpus with so called parts-of-speech-tags, sorting the tokens into categories like noun, verb, adjective, determiner, pronoun, adverb, conjunction, etc. This is challenging since one word can have varying grammatical roles and semantic meaning depending on its syntactic location. Different tagsets can be used depending on how fine grained you want your model to be, but broadly speaking they can be divided into two categories: rule-based taggers and stochastic taggers. Rule-based taggers are decided according to a set of explicitly written rules that were made to dodge tagging ambiguities. Stochastic taggers on the other hand can function like decision trees orientating through probabilistic features or Hidden markov models where for instance an applied Viterbi algorithm can choose the word-and-tag-path with the highest likelihood. The use of HMMs when working with POS-tagging started in the 1980s. 
 
 \subsection{Experiments}
 
-We have observed that sometimes our n-gram model gives us an answer that doesn?t fit in syntactically. Because of this we decided to use the nature of each word to perfect our predictions. We tried a simple approach: first, we created a new text from all the parts-of-speech-tags (POS-tags) associated to the original words of the text. Then, we trained an n-gram model on this text. Here, n can be higher than when we work with normal corpora because a lot of completely different word sequences can be hidden behind the same POS-tag sequence. For example, we have one particular sequence to complete and n is the longest number for an n-gram model we can accept if we want to find word sequences of length n on our corpora where the first n-1 are the last from our word sequence.
+So far our n-gram model word predictor have often given us an answer that doesn't fit in syntactically. Because of this we decided to make of use the nature of each word to perfect our predictions. We tried a simple approach: by creating a new "text" from all the parts-of-speech-tags (POS-tags) associated to the original words of the text we could train a "meta" m-gram model on just the long sequence of tags. Then, we trained an n-gram model on the text. For the "tag text", m can be higher than when we work with normal corpora since a lot of completely different word sequences can be hidden behind the same POS-tag sequence.
 
-But, if we only consider the tags associated to the words, we can build an m-gram model where m is higher than n and it gives the probability of having one POS tag after the tags representing our word sequence, and it is much more likely to have this kind of tags sequence even if we they do not represent the same words sequence. It means that we have more information about the probability of the tag following our sequence. We decided to multiply the probability of an n-gram word sequence with the probability of the m-gram tag sequence where the last tag is the tag representing the last word of the words sequence. This method changes the original results and makes some sequences more probable than others with the grammatical information we have.
+For the tag-prediction, we can build an m-gram model where $m \ge n$ that gives the probability of having a particular POS-tag after the sequence of tags corresponding to our word sequence. In our grammar model, we decided to multiply the probability of an n-gram word sequence with the probability of the m-gram tag sequence where the last tag corresponds to the last word. This method changes the original results and makes some sequences more probable than others, given this new grammatical information.
 
 \begin{table}[]
 \centering
@@ -236,20 +235,16 @@ Alice was looking for the fan and the pair of white kid gloves ,       & 4 \\ \h
 
 \subsection{Issues}
 
-Without smoothing, we can have the same problem than before where every possible tags sequence according to the possible words Ngrams, have a probability equal to zero. To resolve this, we can use the same smoothing that we used for words and still get results. Our method does not rely on a mathematical explanation but it still allows us to take into consideration the grammar, at a deeper level than for words, at the only condition that we use corpora which have the same grammar type as the text we want to complete, to train our Ngrams model. Indeed, we know that the syntax can be completely different in poetry, Shakespeare works or novels. It was already true when we did not use grammar but it becomes absolutely necessary here or the grammar prediction would just make the performance of our results decrease.
+Without smoothing, the same problem as before remains: zero probabilites for unseen events (be it tags or words). To resolve this, we can use the same smoothing that we used previously and have better results. Our method does not rely on a mathematical explanation but it still allows us to take into consideration the grammar, at a deeper level than for words, at the only condition that we use corpora which have the same grammar type as the text we want to complete, to train our n-gram model on. Indeed, we know that the syntax can be completely different in poetry, Shakespeare works or novels. It was already true when we did not use grammar but it becomes absolutely necessary here or the grammar prediction would just make the performance of our results decrease.
 Using parse trees could be an improvement to model grammatical sentence structure, as it is more precise to use a more detailed context than only POS tags.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Summary and Conclusions}
+\section{Summary and conclusions}
 \label{sec:summary}
 
-N-gram models need additional layers consisting of smoothing techniques and grammar constraints to be more credible as word predictors.
-
-The goal of this project was to predict word to complete a word sequence. Having gone from simple bigram models to more complex n-gram models using different smoothing methods and grammar constraints, we have been able to improve the performances of our predictor on different types of corpora.
-
-We also realized that the performance of our system not only relies on the length of our n-gram model but also on its customization with smoothing, grammar constraints, the size of the training corpora and its similarity to our input.
-
+In order to predict the next and following word of a sentence, we trained n-gram models on several corpora of English text.  We extended our model by incorporating part-of-speech tags to produce grammatically correct sentences, and smoothing to handle unseen words. 
+We find that the training corpus (more similar to the prediction genre is better), smoothing, and grammar constraint all contribute to the effectiveness of our model.  Further extensions could focus on the implementation (efficient data structures to handle large models), or large grammars to validate syntactically correct sentences.
 
 \nocite{*}
 \bibliographystyle{plain}
