@@ -16,12 +16,12 @@
 GROUP 34\\
 \begin{tabular}{cccc}
 Sofia Broom\'e & Jeremy Krebs & Valentin Geffrier & Erik Fredriksen \\
-901210 & 920421 & BIRTHDATE3 & 860328 \\
+901210 & 920421 & 921104 & 860328 \\
 sbroome@kth.se & jeremyk@kth.se & MAIL3@kth.se & efred@kth.se \\
-\includegraphics[width=0.13\linewidth]{Nikkaluokta} & 
-\includegraphics[width=0.13\linewidth]{Alan_Turing_photo} & 
-\includegraphics[width=0.13\linewidth]{Alan_Turing_photo} & 
-\includegraphics[width=0.13\linewidth]{erikpancakes}
+\includegraphics[width=0.16\linewidth]{Nikkaluokta} & 
+\includegraphics[width=0.19\linewidth]{jrm} & 
+\includegraphics[width=0.13\linewidth]{geff} & 
+\includegraphics[width=0.15\linewidth]{erikpancakes}
 \end{tabular}} 
 % Normally there will not be any pictures but we want
 % these so that we can connect faces to names in the course
@@ -51,16 +51,7 @@ An investigation of how basic n-gram models of our own implementation can be imp
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{NOTE}
-\begin{itemize}
 
-\item \textit{Introduction, Related Works, Experimental Results, Discussions, Summary} are sections that MUST be contained.
-
-\item The section \textit{Contributions} is a place to express any difference in contributions. The default assumption is that you all agree that all of you had an equal part to play in the project.
-
-\item We suggest that you try to write this as scientifically as possible and not simply like a project report. Good Luck!
-
-\end{itemize}
 \section{Introduction}
 \label{sec:intro}
 
@@ -81,7 +72,7 @@ From the above examples we see that in many cases just using the n-gram model in
 In what follows we will explore n-gram models of varying degrees on dito corpora and grammar to see which results are obtained under which circumstances.
 
 \subsection{Related works}
-We began our exploring of natural language processing through the Natural Language Toolkit website and the accompanying book, Natural Language Processing with Python. The theory to accompany the more practical methods from NLTK was mainly obtained from Daniel Jurafsky and James H. Martin's 1999 book Speech and Language processing \ref{JurafskyBook}. Daniel Jurafsky also has made a series of video lectures on the subject for a Coursera online course. From \ref{brown1992} and \ref{garay2006text} we got a sense of the challenges of extending the concept of n-grams, as well as for modern applications of text prediction.
+We began our exploring of natural language processing through the Natural Language Toolkit website and the accompanying book, Natural Language Processing with Python. The theory to accompany the more practical methods from NLTK was mainly obtained from Daniel Jurafsky and James H. Martin's 1999 book Speech and Language processing \cite{JurafskyBook}. Daniel Jurafsky also has made a series of video lectures on the subject for a Coursera online course. From \cite{brown1992class} and \cite{garay2006text} we got a sense of the challenges of extending the concept of n-grams, as well as for modern applications of text prediction.
 
 \subsection{Outline}
 The lion's share of the report consists of three sections, hereunder, concerning respectively n-gram models, n-gram models with smoothing and n-gram models with grammar constraints, where each of them contains some theory, accounts of our related experiments and discussions of possible issues. In the end, the results of our work are presented with a subsequent summary and conclusion.
@@ -101,11 +92,12 @@ These models are quite easy to understand: if n is a fixed integer, a n-gram mod
 
 $$ p = p(w_n | w_1 .. w_{n-1}) = \frac{|{(w_1, .., w_{n-1}, w_n) \in C}|}{|{(w_1, .., w_{n-1}, x) \in C}|} $$
 
-With this formula, it is possible to know the more likely next word of a sentence, but also to generate the end of the sentence, each new word selected using the probability distribution. Therefore, a n-gram which appeared a lot in a corpora is more likely to appear in the sentence generator. However, this also tells us that heuristically, we should expect different results from one corpora to another. For instance using corpora from Shakespeare, the generated sentences are likely to be more erratic than with a novel since Shakespeare's syntax and grammar are more complicated. For modernist poetry like Whitman's Leaves of Grass (corpus \# 4) it turns out to work quite well with a basic n-gram model, since the somewhat abstract resulting sentences fit with the textual situation and since the verse structure isn't as demanding as in shakespearian texts. Poetry has higher context satisfaction for a crude n-gram model.
+With this formula, it is possible to know the more likely next word of a sentence, but also to generate the end of the sentence, each new word selected using the probability distribution. Therefore, a n-gram which appeared a lot in a corpora is more likely to appear in the sentence generator. However, this also tells us that heuristically, we should expect different results from one corpora to another. The length of the corpora is to take into consideration since the idea is to train the model. The corpora we used have between 10,000 and 1,000,000 words. Another point is that using corpora from Shakespeare, the generated sentences are likely to be more erratic than with a novel since Shakespeare's syntax and grammar are more complicated. For modernist poetry like Whitman's Leaves of Grass (corpus \# 4) it turns out to work quite well with a basic n-gram model, since the somewhat abstract resulting sentences fit with the textual situation and since the verse structure isn't as demanding as in shakespearian texts. Poetry has higher context satisfaction for a crude n-gram model.
 
-\subsection{Experiments}
+
+\subsection{Experimental results}
 \subsubsection{Parameter $n$}
-	The first experiment we did was to try to understand the influence of n in our word predictor and how we could tune this parameter. In these experiments, only the corpora and n is changed - no parts of speech tagger or smoothing have been used. The table \ref{tab:corpus2} shows n-gram predictions of the end of the sentence "Alice was looking for" for $ n\in(2,4) $.
+	One experiment we did was to try to understand the influence of n in our word predictor and how we could tune this parameter. In these experiments, only the corpora and n is changed - no parts of speech tagger or smoothing have been used. The table \ref{tab:corpus2} shows n-gram predictions of the end of the sentence "Alice was looking for" for $ n\in(2,4) $.
 	
 We should note that a 1-gram model is not a Markov model. It just predicts a word according to its frequency in a book. As punctuation symbols are considered as words in this corpora, that explains why it predicts so many commas and apostrophes. 
 
@@ -115,160 +107,38 @@ With 3-gram models and 4-gram models one can see that the sentences are a bit mo
 	
 If n is too low, the predictor will be inferior because one or two words might not be enough to predict a likely next word. However if n is too big, the corpora needs to be really extensive as well and contain enough different n-grams so that the predictor is more diversified.
 
-\subsubsection{Example results}
-\begin{table}
-\small
-\begin{center}
-\begin{tabular}{|c|l|c|c|}
-\hline
-\# & Tested corpora & Year & Nr. of words\\ \hline
-1 & Selected poems by William Blake & 1789 & 8354 \\ \hline
-2 & Alice's Adventures in Wonderland by Lewis Carroll & 1865 & 34110 \\ \hline
-3 & The Bible & & 100000 (1010654) \\ \hline
-4 & Leaves of Grass by Walt Whitman & 1891 & 154883\\ \hline
-5 & Moby Dick by Herman Melville & 1851 & 260819\\ \hline
-\end{tabular}
-\caption{The corpora tested in the n-gram experiments.}
-\label{tab:corplist}
-\end{center}
-\end{table}
+\subsubsection{Example}
 
-\begin{table}
-\small
-%\begin{center}
-\begin{tabular}{| l |c|}
-\hline
-Query followed by 10 generated words & $n$ \\ \hline
-"Infant smiles are his own . Gone was thy Maker lay . Pretty joy to " & 2\\ \hline
-"Infant smiles are his own destruction ? Can delight . Folly is dwelling too ?"& 2 \\ \hline
-"Infant smiles are his own smiles on my foe outstretched beneath the skies ; And" & 2 \\ \hline
-"Infant smiles are his own grave plot she in darkness plough ? Can a threat" & 2 \\ \hline
-
-"Infant smiles are his own smiles ; Heaven and earth to peace beguiles . DIVINE " & 3 \\ \hline
-"Infant smiles are his own smiles ; Heaven and earth to peace beguiles . DIVINE" & 3 \\ \hline
-"Infant smiles are his own smiles ; Heaven and earth to peace , and fled " & 3 \\ \hline
-"Infant smiles are his own smiles ; Heaven and earth to peace beguiles . DIVINE" & 3 \\ \hline
-
-"Infant smiles are his own smiles ; Heaven and earth to peace beguiles . DIVINE" & 4 \\ \hline
-"Infant smiles are his own smiles ; Heaven and earth to peace beguiles . DIVINE" & 4 \\ \hline
-"Infant smiles are his own smiles ; Heaven and earth to peace beguiles . DIVINE" & 4 \\ \hline
-
-\end{tabular}
-\caption{ Corpus 1}
-\label{tab:corpus1}
-%\end{center}
-\end{table}
-
-\begin{table}
+\begin{table}[!h]
 \small
 %\begin{center}
 \begin{tabular}{| l |c|}
 \hline
 Query followed by 10 generated words & $n$ \\ \hline
 "Alice was looking for a very neatly spread his belt and began . ' " & 2\\ \hline
+"Alice was looking for I wish I don ' And with a lobster as" & 2\\ \hline
+"Alice was looking for I ' Well , but I ' m a dance" & 2\\ \hline
 "Alice was looking for eggs , I can kick a little bottle that stood "& 3 \\ \hline
+"Alice was looking for the White Rabbit blew three blasts on the look of"& 3 \\ \hline
+"Alice was looking for the garden , among the bright eager eyes were nearly"& 3 \\ \hline
+"Alice was looking for the fan and gloves . ' How queer it seems" & 4 \\ \hline
 "Alice was looking for the fan and a pair of white kid gloves , " & 4 \\ \hline
+"Alice was looking for the fan and gloves , and she very good -" & 4 \\ \hline
 \end{tabular}
 \caption{Corpus 2}
 \label{tab:corpus2}
 %\end{center}
 \end{table}
-\begin{table}
-\small
-%\begin{center}
-\begin{tabular}{| l |c|}
-\hline
-Query followed by 10 generated words & $n$ \\ \hline
-"And they were both naked unto Pharaoh ' s milk , and shut him . " & 2\\ \hline
-"And they were both naked ? 26 And Miriam the flesh from thence did Sarah"& 2 \\ \hline
-"And they were both naked ? what hast done in the best of the north" & 2 \\ \hline
-"And they were both naked ; and daubed it without blemish unto him : 13" & 2 \\ \hline
 
-"And they were both naked , the people , and Calneh , in the coupling " & 3 \\ \hline
-"And they were both naked , the face of the burnt offering , even the" & 3 \\ \hline
-"And they were both naked , the children of Israel , and the sheep ." & 3 \\ \hline
-"And they were both naked , the camels had done to him as before ." & 3 \\ \hline
-"And they were both naked , the God of thy servants it be for a" & 3 \\ \hline
-
-"And they were both naked , the man that brought us up out of the" & 4 \\ \hline
-"And they were both naked , the man is become as one of the Hebrews" & 4 \\ \hline
-"And they were both naked , the man is become as one of them opened" & 4 \\ \hline
-"And they were both naked , the man that brought us up out of that" & 4 \\ \hline
-"And they were both naked , the man and his household came with Jacob ." & 4 \\ \hline
-
-\end{tabular}
-\caption{ Corpus 3}
-\label{tab:corpus3}
-%\end{center}
-\end{table}
-
-\begin{table}
-\small
-%\begin{center}
-\begin{tabular}{| l |c|}
-\hline
-Query followed by 10 generated words & $n$ \\ \hline
-"The delicious singing of the mother ' d ship - clad soldiers of ooze and what" & 2\\ \hline
-"The delicious singing of the mother ' d eve delicious word , Elements merge with the"& 2 \\ \hline
-"The delicious singing of the mother ' d back on the midst of Nature your tongue" & 2 \\ \hline
-"The delicious singing of the mother kisses of the clasp me shall cover ' s funeral" & 2 \\ \hline
-"The delicious singing of the mother told - lung ' d every blow through the same" & 2 \\ \hline
-
-"The delicious singing of the mother sleeps with at night , The singers of old or" & 3 \\ \hline
-"The delicious singing of the mother misused by her children , resolute , under the sun" & 3 \\ \hline
-"The delicious singing of the mother never turning her vigilant eyes ,) Calmly a lady '" & 3 \\ \hline
-"The delicious singing of the mother of many nations , the shelves are crowded with perfumes" & 3 \\ \hline
-
-"The delicious singing of the mother shines on the white wrist of the daughter , The" & 4 \\ \hline
-"The delicious singing of the mother , the Mississippi flows , Of mighty inland cities yet" & 4 \\ \hline
-"The delicious singing of the mother of many children , These clamors wild to a race" & 4 \\ \hline
-"The delicious singing of the mother , or of me ; Of their languages , governments" & 4 \\ \hline
-"The delicious singing of the mother shines on the white wrist of the daughter , The" & 4 \\ \hline
-
-"Sing on there in the swamp - congratulatory signs and dead . I shall never refuses" & 2\\ \hline
-"Sing on there in the swamp in songs , English war , Sunlight by the Cascade"& 2 \\ \hline
-"Sing on there in the swamp - dug in disgrace to give an open air I" & 2 \\ \hline
-"Sing on there in the swamp , busier sphere more in granite walls of the West" & 2 \\ \hline
-"Sing on there in the swamp in vain the country ; You past .) Now I" & 2 \\ \hline
-
-"Sing on there in the swamp in the houses are alive with people , I pause" & 3 \\ \hline
-"Sing on there in the swamp in secluded recesses , From the head of the real" & 3 \\ \hline
-"Sing on there in the swamp in the ranks marching , on I go , I'" & 3 \\ \hline
-"Sing on there in the swamp - perfume , with brow elate and governing hand ." & 3 \\ \hline
-
-"Sing on there in the swamp , O singer bashful and tender , I hear in" & 4 \\ \hline
-"Sing on there in the swamp , O singer bashful and tender , I hear the" & 4 \\ \hline
-"Sing on there in the swamp , O singer bashful and tender , I hear the" & 4 \\ \hline
-"Sing on there in the swamp , O singer bashful and tender , I hear in" & 4 \\ \hline
-
-\end{tabular}
-\caption{ Corpus 4}
-\label{tab:corpus4}
-%\end{center}
-\end{table}
-
-\begin{table}
-\small
-%\begin{center}
-\begin{tabular}{| l |c|}
-\hline
-Query followed by 10 generated words & $n$ \\ \hline
-"However , there is a whale - fleet of this , and the two" & 2\\ \hline
-"However , there is no place to live in the captain ' s a"& 3 \\ \hline
-"However , there is no telling . But a day or two previous ," & 4 \\ \hline
-"I think that you must have been offered a whale , when the long" & 2\\ \hline
-"I think that you do yours in approved state stocks bringing in good time"& 3 \\ \hline
-"I think that you really perceived drops of moisture in the spout - hole" & 4 \\ \hline
-\end{tabular}
-\caption{Corpus 5}
-\label{tab:corpus5}
-%\end{center}
-\end{table}
 
 \subsection{Issues}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%   SMOOTHING   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{N-gram models with smoothing}
-
 \subsubsection{Initial practical problems: an SRILM excursion}
 Building a full-fledged language model in Python is not a trivial endeavor (this could be a project in itself). We thought NLTK provided the facilities to accomplish this, but it turned out this module had been deprecated due to bugs. 
 
@@ -289,7 +159,7 @@ Doing actual predictions with this framework proved to be a bit harder, we found
 		\item[Good-Turing:] A more complicated method that gives the same probability to the events that occured $n$ times as to the events that occured $n+1$ times. With high values of $n$ it can happen that no event occured that many times. For these events, an estimation is done. In NLTK, the number of events that occured $n$ times is estimated to be $N(n) = an^b$ where $a$ and $b$ are estimated using linear regression on the logarithm of the equation: $log\ N(n) = log\ a + b\ log\ n$.
 	\end{description}
 	
-	\subsection{Experiments}
+	\subsection{Experimental results}
 	
 	In the following experiments, we tried to point out how smoothing methods could change the probability distribution of the n-grams for our predictor. We also compared the sentences with or without smoothing, but comparing the probability distribution makes more sense to understand how smoothing methods work. Three n-grams of different frequencies in the corpora served as illustrative examples for how their (respective) were changed with smoothing.
 	
@@ -389,17 +259,7 @@ The goal of this project was to predict word to complete a word sequence. Having
 We also realized that the performance of our system not only relies on the length of our n-gram model but also on its customization with smoothing, grammar constraints, the size of the training corpora and its similarity to our input.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Contributions}
-\label{sec:contributions}
-We the members of project group34 unanimously declare that 
-we have all equally contributed toward the completion of this
-project. 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
+\nocite{*}
 \bibliographystyle{plain}
 \bibliography{reflist}
 

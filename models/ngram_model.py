@@ -3,7 +3,9 @@ import nltk
 import random
 
 
-"""General Ngram model implementation"""
+""" @author Jeremy Krebs
+    General Ngram model implementation
+"""
 
 
 class NgramModel(AbstractNgramModel):

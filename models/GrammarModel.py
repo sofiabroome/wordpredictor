@@ -1,25 +1,26 @@
 from abstract_ngram_model import AbstractNgramModel
 import nltk
-from ngram_model import NgramModel
 import random
 
-"""Grammar Ngram model implementation"""
+""" @author Valentin Geffrier
+    Grammar Ngram model implementation
+"""
 
 
 class GrammarModel(AbstractNgramModel):
-    
+
     def __init__(self, n=4):
         self.n = n
 
     # Should receive words with tags
     def train(self, words, tagged=False):
-        if tagged==True:
+        if tagged is True:
             tags = []
             for i in range(len(words)):
                 tags.append(words[i][1])
             self.ngrams = list(nltk.ngrams(tags, self.n))
         else:
-            #text = nltk.word_tokenize(words)
+            # text = nltk.word_tokenize(words)
             tagged_words = nltk.pos_tag(words)
             universal_tags = [nltk.map_tag('en-ptb', 'universal', tag) for word, tag in tagged_words]
             self.ngrams = list(nltk.ngrams(universal_tags, self.n))
@@ -83,14 +84,14 @@ class GrammarModel(AbstractNgramModel):
             empty = []
             return empty
         # Keep only the predicted tag (the last one) of each match
-        tags = [(tuple[-1],prob) for tuple, prob in list(set(tag_matches))]
+        tags = [(tuple[-1], prob) for tuple, prob in list(set(tag_matches))]
 
         # Predict the possible tags and their probabilities after the word sequence
         # according the Word Ngrams model argument of this method
         word_matches = model.predict_next_word(base_query_string)
 
         # Keep only the predicted word (the last one) of each match
-        words = [(tuple[-1],prob) for tuple, prob in list(set(word_matches))]
+        words = [(tuple[-1], prob) for tuple, prob in list(set(word_matches))]
 
         # Fetch the probability of the tag assoiated to each predicted world
         prior = []
@@ -113,14 +114,14 @@ class GrammarModel(AbstractNgramModel):
         better_matches = []
         for i in range(len(prior)):
             tuple, prob = list(set(word_matches))[i]
-            better_matches.append((tuple, prob*prior[i]))
+            better_matches.append((tuple, prob * prior[i]))
         prob_sum = sum(m[-1] for m in better_matches)
         better_matches = [[m[0], m[-1] / prob_sum] for m in better_matches]
         return better_matches
-    
+
     def predict_words(self, model, base_query_string, n=10):
         for i in range(n):
-            matches = self.predict_next_word(model,base_query_string)
+            matches = self.predict_next_word(model, base_query_string)
             prob_sum = sum(m[-1] for m in matches)
             matches = [[m[0], m[-1] / prob_sum] for m in matches]
             rand = random.random()

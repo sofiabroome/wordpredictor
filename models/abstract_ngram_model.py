@@ -1,5 +1,7 @@
 
-"""Abstract Class to represent a ngram model implementation"""
+""" @author Jeremy Krebs
+    Abstract Class to represent a ngram model implementation
+"""
 
 
 class AbstractNgramModel():
