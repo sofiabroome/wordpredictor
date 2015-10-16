@@ -23,10 +23,7 @@ sbroome@kth.se & jeremyk@kth.se & MAIL3@kth.se & efred@kth.se \\
 \includegraphics[width=0.13\linewidth]{geff} & 
 \includegraphics[width=0.15\linewidth]{erikpancakes}
 \end{tabular}} 
-% Normally there will not be any pictures but we want
-% these so that we can connect faces to names in the course
-% We also want birthdates so that we can tell people with the same
-% name apart
+
 \date{}
 
 \pagestyle{fancy}
@@ -42,7 +39,7 @@ sbroome@kth.se & jeremyk@kth.se & MAIL3@kth.se & efred@kth.se \\
 \thispagestyle{fancy}
 
 \begin{abstract}
-The goal of this project was to predict word to complete a word sequence. Having gone from simple bigram models to more complex n-gram models using different smoothing methods and grammar constraints, we have been able to improve the performances of our predictor on different types of corpora. N-gram models need additional layers consisting of smoothing techniques and grammar constraints to be more credible as word predictors. The performance of our system not only relies on the length of our n-gram model but also on its customization with smoothing, grammar constraints, the size of the training corpora and its similarity to our input.
+The goal of this project was to predict words to continue a word sequence. Going from simple bigram models to more complex n-gram models using different smoothing methods and grammar constraints, we have been able to improve the performances of our predictor on different types of corpora. N-gram models need additional layers consisting of smoothing techniques and grammar constraints to be more credible as word predictors. The performance of our system relies not only on the length of our n-gram model but also on its customization with smoothing, grammar constraints, the size of the training corpora and its similarity to our input.
 \end{abstract}
 
 
@@ -58,11 +55,11 @@ Being able to dissect, classify, analyze and reproduce language is a highly rele
 
 N-grams are the building block for almost every language model. An n-gram is simply a tuple of n co-occuring words, and the probability distribution of these tuples (according to some collection of words) constitute our model of the language. This  simple construct captures many patterns in language. Grammar is not taken into account explicitly, but local context will inevitably be built in. For instance, an adjective will in many cases be followed by a noun, or a pronoun by a verb, and thus a bigram composed of those two grammatical types in the mentioned order will score high in probability.  Gao and Suzuki\cite{gao2004long} explore long distance dependency for words through word clusters and the linguistically motivated {\it function word skipping} method where function words such as "has", "a", "in", "and", "the", etc, are skipped in favor of more significant words, called head words
 
-There are some practical issues with the n-gram model. Perfectly valid ngrams missing from the training corpus will be given a zero probability. Smoothing techniques are an attempt to tackle this issue. Higher-order n-gram are particularly prone to sparseness, so we might want to "back off" from the n'th order and approximate it with a weighted sum of lower order ngrams. 
+There are some practical issues with the n-gram model. Perfectly valid n-grams missing from the training corpus will be given a zero probability. Smoothing techniques are an attempt to tackle this issue. Higher-order n-gram are particularly prone to sparseness, so we might want to "back off" from the n'th order and approximate it with a weighted sum of lower order n-grams. 
 
-Furthermore, what kinds of test sets does our training set allow us to perform well on? One should train on a  corpus which is representative of the domain of the intended use. And what happens to our model when we apply it to languages with a higher degree of inflection? We train on English text, but languages like Swedish, Basque or German have been shown to perform worse. 
+Furthermore, what kinds of test sets does our training set allow us to perform well on? One should train on a  corpus which is representative of the domain of the intended use. And what happens to our model when we apply it to languages with a higher degree of inflection? We train on English text, but languages like Swedish, Basque or German have been shown to perform worse.\cite{garay2006text}
 
-From the above examples we see that in many cases just using the n-gram model in itself will not suffice. Over the years, researchers in natural language processing have added a lot of tweaks to the original idea, cache language models, LSA-based language models and maximum entropy models, to name a few.
+From the above examples we see that in many cases just using the n-gram model in itself will not suffice. Over the years, researchers in natural language processing have added a lot of tweaks to the original idea; cache language models, LSA-based language models and maximum entropy models, to name a few.
 
 In what follows we will explore n-gram models of varying degrees on corpora and grammar to see which results are obtained under which circumstances.
 
@@ -70,7 +67,7 @@ In what follows we will explore n-gram models of varying degrees on corpora and 
 We began our exploring of natural language processing through the Natural Language Toolkit website and the accompanying book, Natural Language Processing with Python. The theory to accompany the more practical methods from NLTK was mainly obtained from Daniel Jurafsky and James H. Martin's 1999 book Speech and Language processing \cite{JurafskyBook}. Daniel Jurafsky also has made a series of video lectures on the subject for a Coursera online course. From \cite{brown1992class} and \cite{garay2006text} we got a sense of the challenges of extending the concept of n-grams, as well as for modern applications of text prediction.
 
 \subsection{Outline}
-The lion's share of the report consists of three sections, hereunder, concerning respectively n-gram models, n-gram models with smoothing and n-gram models with grammar constraints, where each of them contains some theory, accounts of our related experiments and discussions of possible issues. In the end, the results of our work are presented with a subsequent summary and conclusion.
+The lion's share of the report consists of three sections, hereunder, concerning respectively n-gram models, n-gram models with smoothing and n-gram models with grammar constraints, where each of them contains some theory, accounts of our related experiments and results and discussions of possible issues. In the end there is a summary and conclusion.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -85,9 +82,9 @@ The first mathematical tool needed in all natural language processing experiment
 
 These models are quite easy to understand: if n is a fixed integer, a n-gram model works as a Markov chain to predict the next word. A model is trained on a corpora C, for instance a book or a set of books, so that the probability of each n-gram in the language is learned by the model. The bigger the corpora the more accurate and reliable will be the model as it will have more data to compute probabilities of sequences. More precisely, the probability $p$ that the word $w_n$ follows the group of words $w_1 w_2 ... w_{n-1}$ is given by the following formula:
 
-$$ p = p(w_n | w_1 .. w_{n-1}) = \frac{|{(w_1, .., w_{n-1}, w_n) \in C}|}{|{(w_1, .., w_{n-1}, x) \in C}|} $$
+$$ p = p(w_n | w_1 .. w_{n-1}) = \frac{|{(w_1, .., w_{n-1}, w_n) \in C}|}{|{(w_1, .., w_{n-1}, x) \in C}|} . $$
 
-With this formula, it is possible to know the more likely next word of a sentence, but also to generate the end of the sentence, each new word selected using the probability distribution. Therefore, a n-gram which appeared a lot in a corpora is more likely to appear in the sentence generator. However, this also tells us that heuristically, we should expect different results from one corpora to another. The length of the corpora is to take into consideration since the idea is to train the model. The corpora we used have between 10,000 and 1,000,000 words. Another point is that using corpora from Shakespeare, the generated sentences are likely to be more erratic than with a novel since Shakespeare's syntax and grammar are more complicated. For modernist poetry like Whitman's Leaves of Grass (corpus \# 4) it turns out to work quite well with a basic n-gram model, since the somewhat abstract resulting sentences fit with the textual situation and since the verse structure isn't as demanding as in shakespearian texts. Poetry has higher context satisfaction for a crude n-gram model.
+This makes it possible to predict a likely next word, but also to generate the end of the sentence, each new word selected using the probability distribution. Therefore, an n-gram which appeared a lot in a corpora is more likely to appear in the sentence generator. However, this also tells us that heuristically, we should expect different results from one corpora to another. The length of the corpora is to take into consideration since the idea is to train the model. The corpora we used have between 10,000 and 1,000,000 words. Another point is that using corpora from Shakespeare, the generated sentences are likely to be more erratic than with a novel since Shakespeare's syntax and grammar are more complicated. For modernist poetry like Whitman's Leaves of Grass it turns out to work quite well with a basic n-gram model, since the somewhat abstract resulting sentences fit with the textual situation and since the verse structure isn't as demanding as in shakespearian texts. Poetry has higher context satisfaction for a crude n-gram model.
 
 
 \subsection{Experimental results}
